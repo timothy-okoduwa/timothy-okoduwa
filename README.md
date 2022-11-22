@@ -21,7 +21,6 @@
 
 <h3 align="left">Connect with me:</h3>
 <p align="left">
-<a href="https://twitter.com/@timothyokduwa" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/twitter.svg" alt="@timothyokduwa" height="30" width="40" /></a>
 <a href="https://linkedin.com/in/timothy okoduwa" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="timothy okoduwa" height="30" width="40" /></a>
 <a href="https://stackoverflow.com/users/https://stackoverflow.com/users/15952918/timothy-okoduwa" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/stack-overflow.svg" alt="https://stackoverflow.com/users/15952918/timothy-okoduwa" height="30" width="40" /></a>
 <a href="https://fb.com/timothy okoduwa" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/facebook.svg" alt="timothy okoduwa" height="30" width="40" /></a>
@@ -35,3 +34,5 @@
 <p><img align="left" src="https://github-readme-stats.vercel.app/api/top-langs?username=timothy-okoduwa&show_icons=true&locale=en&layout=compact" alt="timothy-okoduwa" /></p>
 
 <p>&nbsp;<img align="center" src="https://github-readme-stats.vercel.app/api?username=timothy-okoduwa&show_icons=true&locale=en" alt="timothy-okoduwa" /></p>
+
+<p><img align="center" src="https://github-readme-streak-stats.herokuapp.com/?user=timothy-okoduwa&" alt="timothy-okoduwa" /></p>
