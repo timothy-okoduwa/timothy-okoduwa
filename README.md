@@ -1,4 +1,5 @@
 <h1 align="center">Hi 👋, I'm timothy okoduwa</h1>
+<iframe src="https://giphy.com/embed/M9gbBd9nbDrOTu1Mqx" width="382" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/hacktiv8-coding-codingfromhome-fromhome-M9gbBd9nbDrOTu1Mqx">via GIPHY</a></p>
 <h3 align="center">A passionate fullStack developer from Nigeria</h3>
 
 <p align="left"> <img src="https://komarev.com/ghpvc/?username=timothy-okoduwa&label=Profile%20views&color=0e75b6&style=flat" alt="timothy-okoduwa" /> </p>
