@@ -1,11 +1,9 @@
-<h1 align="center">Hi guys 👋, I'm timothy okoduwa</h1>
+<h1 align="center">Hi 👋, I'm timothy okoduwa</h1>
 <h3 align="center">A passionate fullStack developer from Nigeria</h3>
 
 <p align="left"> <img src="https://komarev.com/ghpvc/?username=timothy-okoduwa&label=Profile%20views&color=0e75b6&style=flat" alt="timothy-okoduwa" /> </p>
 
 <p align="left"> <a href="https://github.com/ryo-ma/github-profile-trophy"><img src="https://github-profile-trophy.vercel.app/?username=timothy-okoduwa" alt="timothy-okoduwa" /></a> </p>
-
-<p align="left"> <a href="https://twitter.com/@timothyokduwa" target="blank"><img src="https://img.shields.io/twitter/follow/@timothyokduwa?logo=twitter&style=for-the-badge" alt="@timothyokduwa" /></a> </p>
 
 - 🔭 I’m currently working on [chat app](https://github.com/timothy-okoduwa/timmychat)
 
@@ -37,5 +35,3 @@
 <p><img align="left" src="https://github-readme-stats.vercel.app/api/top-langs?username=timothy-okoduwa&show_icons=true&locale=en&layout=compact" alt="timothy-okoduwa" /></p>
 
 <p>&nbsp;<img align="center" src="https://github-readme-stats.vercel.app/api?username=timothy-okoduwa&show_icons=true&locale=en" alt="timothy-okoduwa" /></p>
-
-<p><img align="center" src="https://github-readme-streak-stats.herokuapp.com/?user=timothy-okoduwa&" alt="timothy-okoduwa" /></p>
