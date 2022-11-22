@@ -53,3 +53,11 @@
 <p>&nbsp;<img align="center" src="https://github-readme-stats.vercel.app/api?username=timothy-okoduwa&show_icons=true&locale=en" alt="timothy-okoduwa" /></p>
 
 <p><img align="center" src="https://github-readme-streak-stats.herokuapp.com/?user=timothy-okoduwa&" alt="timothy-okoduwa" /></p>
+
+---
+
+### :fire: My Stats :
+
+[![GitHub Streak](http://github-readme-streak-stats.herokuapp.com?user=timothy-okoduwa&theme=dark&background=000000)](https://git.io/streak-stats)
+[![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=timothy-okoduwa&layout=compact&theme=vision-friendly-dark)](https://github.com/anuraghazra/github-readme-stats)
+
