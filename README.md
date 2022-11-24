@@ -4,7 +4,9 @@
   <img src="https://media.giphy.com/media/M9gbBd9nbDrOTu1Mqx/giphy.gif" width="100"/>
 </div>
 <a href="https://app.daily.dev/Okoduwa"><img src="https://api.daily.dev/devcards/b26429fd6ae644d29dbd607bb2f06008.png?r=y2n" width="400" alt="Timothy's Dev Card"/></a>
-
+<br/>
+<br/>
+<br/>
 <div id="badges">
   <a href="https://www.linkedin.com/in/timothy-okoduwa-3845ab215/">
     <img src="https://img.shields.io/badge/LinkedIn-blue?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn Badge"/>
