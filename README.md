@@ -3,8 +3,6 @@
 
 <p align="left"> <img src="https://komarev.com/ghpvc/?username=timothy-okoduwa&label=Profile%20views&color=0e75b6&style=flat" alt="timothy-okoduwa" /> </p>
 
-<p align="left"> <a href="https://github.com/ryo-ma/github-profile-trophy"><img src="https://github-profile-trophy.vercel.app/?username=timothy-okoduwa" alt="timothy-okoduwa" /></a> </p>
-
 <p align="left"> <a href="https://twitter.com/timothyokoduwa" target="blank"><img src="https://img.shields.io/twitter/follow/timothyokoduwa?logo=twitter&style=for-the-badge" alt="timothyokoduwa" /></a> </p>
 
 - 🔭 I’m currently working on [ACS](not ready)
@@ -37,8 +35,4 @@
 <h3 align="left">Support:</h3>
 <p><a href="https://www.buymeacoffee.com/t8mothy0k0duwa"> <img align="left" src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="50" width="210" alt="t8mothy0k0duwa" /></a></p><br><br>
 
-<p><img align="left" src="https://github-readme-stats.vercel.app/api/top-langs?username=timothy-okoduwa&show_icons=true&locale=en&layout=compact" alt="timothy-okoduwa" /></p>
-
 <p>&nbsp;<img align="center" src="https://github-readme-stats.vercel.app/api?username=timothy-okoduwa&show_icons=true&locale=en" alt="timothy-okoduwa" /></p>
-
-<p><img align="center" src="https://github-readme-streak-stats.herokuapp.com/?user=timothy-okoduwa&" alt="timothy-okoduwa" /></p>
