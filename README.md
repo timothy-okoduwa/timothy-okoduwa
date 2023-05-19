@@ -35,4 +35,4 @@
 <h3 align="left">Support:</h3>
 <p><a href="https://www.buymeacoffee.com/t8mothy0k0duwa"> <img align="left" src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="50" width="210" alt="t8mothy0k0duwa" /></a></p><br><br>
 
-<p>&nbsp;<img align="center" src="https://github-readme-stats.vercel.app/api?username=timothy-okoduwa&show_icons=true&locale=en" alt="timothy-okoduwa" /></p>
+
