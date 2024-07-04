@@ -5,15 +5,15 @@
 
 <p align="left"> <a href="https://twitter.com/timothyokoduwa" target="blank"><img src="https://img.shields.io/twitter/follow/timothyokoduwa?logo=twitter&style=for-the-badge" alt="timothyokoduwa" /></a> </p>
 
-- 🔭 I’m currently working on [ACS](not ready)
+- 🔭 I’m currently working on [OAE]
 
-- 🌱 I’m currently learning **Dart,Flutter**
+- 🌱 I’m currently learning **Dart,Flutter,THREE.JS**
 
 - 👯 I’m looking to collaborate on **web and mobile projects**
 
 - 👨‍💻 All of my projects are available at [t8m0thy0k0duwa.netlify.app](t8m0thy0k0duwa.netlify.app)
 
-- 💬 Ask me about **react,next,firebase,**
+- 💬 Ask me about **react,next,firebase,REACT-NATIVE**
 
 - 📫 How to reach me **timmyleeokoduwa7@gmail.com**
 
