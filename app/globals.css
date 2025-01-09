@@ -1,0 +1,139 @@
+/** @format */
+body {
+  background-color: #111111;
+}
+.cantsyat {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+@media screen and (max-width: 991px) {
+  .mainn {
+    width: 90% !important;
+  }
+}
+.mainn {
+  width: 50%;
+  margin-top: 29px;
+}
+.nameofdev {
+  font-size: 24px;
+  font-weight: 500;
+  font-family: "IBM Plex Mono", serif;
+  color: #e9e1e1;
+}
+.conff {
+  margin-top: 20px !important;
+}
+.email {
+  color: #b6aeaa;
+  font-size: 16px;
+  font-family: "IBM Plex Mono", serif;
+}
+.email:hover {
+  color: #f4a5e5 !important;
+}
+.eifj {
+  color: inherit;
+}
+.eifj:hover {
+  color: #f4a5e5 !important;
+}
+.infoss {
+  margin-top: 40px;
+  font-size: 14px;
+  font-family: "IBM Plex Mono", serif;
+  color: #e9e1e1;
+}
+.projj {
+  margin-top: 50px;
+}
+.lettl {
+  color: #e9e1e1;
+  font-size: 20px;
+  font-family: "IBM Plex Mono", serif;
+  font-weight: 500;
+}
+.secondp {
+  display: flex;
+  margin-top: 30px;
+  gap: 10px;
+}
+.firstc {
+  font-size: 16px;
+  font-family: "IBM Plex Mono", serif;
+  color: #e9e1e1;
+}
+.secondc {
+  font-size: 10px;
+  font-family: "IBM Plex Mono", serif;
+  color: #e9e1e1;
+}
+.expp {
+  font-size: 14px;
+  font-family: "IBM Plex Mono", serif;
+  color: #b6aeaa;
+  margin-top: 10px;
+}
+.borr {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  background-color: #b6aeaa1a;
+  width: fit-content;
+  color: #b6aeaa;
+  font-size: 13px;
+  font-family: "IBM Plex Mono", serif;
+  cursor: pointer;
+}
+.mt-3 {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.kfie {
+  margin-top: 40px;
+}
+.bugsss {
+  color: #b6aeaa;
+  font-size: 16px;
+  font-family: "IBM Plex Mono", serif;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.ouuu {
+  margin-top: 50px;
+  margin-bottom: 30px;
+}
+.lineee {
+  width: 100%;
+  height: 0.5px;
+  background-color: #e9e1e1;
+}
+.rights {
+  color: #e9e1e1;
+  font-size: 14px;
+  font-family: "IBM Plex Mono", serif;
+}
+.djhdud {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.forimage {
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;
+  background-color: #e9e1e1;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+.forimage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
