@@ -68,7 +68,7 @@ const project = [
   {
     name: "Gbionik",
     description:
-      "Black is a financial app that allows users to manage their money, access their salary anytime, and grow their wealth.",
+      "Gbionik is a MedTech startup in Cameroon offering early cancer detection through advanced blood tests for over 60 cancer types, aiming to improve survival rates.",
     link: "https://gbionik.vercel.app/",
     type: "Done",
     github: "https://github.com/timothy-okoduwa/gbionik",
@@ -100,7 +100,7 @@ const project = [
   {
     name: "Black.Africa",
     description:
-      "Gbionik is a MedTech startup in Cameroon offering early cancer detection through advanced blood tests for over 60 cancer types, aiming to improve survival rates.",
+      "Black is a financial app that allows users to manage their money, access their salary anytime, and grow their wealth.",
     link: "https://black-africa.vercel.app/",
     type: "Done",
     github: "https://github.com/timothy-okoduwa/black-africa",
