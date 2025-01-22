@@ -272,10 +272,10 @@ const MainPage = () => {
                 <div className="rights">
                   Source Code:{" "}
                   <a
-                    href="https://github.com/timothy-okoduwa"
+                    href="https://github.com/timothy-okoduwa/timothy-okoduwa"
                     className="email"
                   >
-                    github.com/timothy-okoduwa
+                    github.com/timothy-okoduwa/timothy-okoduwa
                   </a>
                 </div>
               </div>
