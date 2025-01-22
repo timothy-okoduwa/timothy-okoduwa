@@ -2,12 +2,31 @@
 
 const project = [
   {
+    name: "Vestarplus",
+    description:
+      "VestarPlus is a UX, UI, and web design company that collaborates with established brands, businesses, and startups worldwide to create impactful products enhancing user experiences.",
+    link: "https://www.vestarplus.com/",
+    type: "Done + Private",
+    github: "",
+    npm: "",
+  },
+  {
+    name: "Vestarplus Design System",
+    description:
+      "The VestarPlus Design System is a component library developed by the VestarPlus team to streamline and standardize their design and development processes. It offers a collection of reusable UI components, such as avatars, alerts, buttons, and date pickers, which can be utilized across various projects to ensure consistency and efficiency.",
+    link: "https://vestarplus-design-system.vercel.app/",
+    type: "Done + Private",
+    github: "",
+    npm: "https://www.npmjs.com/package/vestarplus-design-system/",
+  },
+  {
     name: "weddingflix",
     description:
       "WeddingFlix allows couples to create personalized wedding websites to share event details, manage RSVPs, and provide essential guest information with customizable templates.",
     link: "https://www.weddingflix.me/",
     type: "Done + Private",
     github: "",
+    npm: "",
   },
   {
     name: "vplusacademy",
@@ -16,6 +35,7 @@ const project = [
     link: "https://www.vplusacademy.com/",
     type: "Done + Private",
     github: "",
+    npm: "",
   },
   {
     name: "Oneway Template",
@@ -24,6 +44,7 @@ const project = [
     link: "https://www.onewaytemplate.com/",
     type: "Done + Private",
     github: "",
+    npm: "",
   },
   {
     name: "Original Aso Ebi",
@@ -32,6 +53,7 @@ const project = [
     link: "https://original-aso-ebi.vercel.app/",
     type: "Done + Private",
     github: "",
+    npm: "",
   },
   {
     name: "FDGS Energy group",
@@ -40,6 +62,7 @@ const project = [
     link: "https://www.fdgsenergygroup.ch/",
     type: "Done + Private",
     github: "",
+    npm: "",
   },
   {
     name: "Renthall",
@@ -48,6 +71,7 @@ const project = [
     link: "https://renthall.vercel.app/",
     type: "WIP + Private",
     github: "",
+    npm: "",
   },
   {
     name: "AMT Logistics",
@@ -56,6 +80,7 @@ const project = [
     link: "https://amt-logistics.vercel.app/",
     type: "Done + Private",
     github: "",
+    npm: "",
   },
   {
     name: "Beternal",
@@ -64,6 +89,7 @@ const project = [
     link: "https://beternal.vercel.app/",
     type: "Done + Private",
     github: "",
+    npm: "",
   },
   {
     name: "Gbionik",
@@ -72,6 +98,7 @@ const project = [
     link: "https://gbionik.vercel.app/",
     type: "Done",
     github: "https://github.com/timothy-okoduwa/gbionik",
+    npm: "",
   },
   {
     name: "IWOMI",
@@ -80,6 +107,7 @@ const project = [
     link: "https://iwomi.vercel.app/",
     type: "Done",
     github: "https://github.com/timothy-okoduwa/iwomi",
+    npm: "",
   },
   {
     name: "Hair Master",
@@ -88,6 +116,7 @@ const project = [
     link: "https://hair-master.vercel.app/",
     type: "Done + Private",
     github: "",
+    npm: "",
   },
   {
     name: "Pirobi",
@@ -96,6 +125,7 @@ const project = [
     link: "https://pirobi.com/",
     type: "Done + Private",
     github: "",
+    npm: "",
   },
   {
     name: "Black.Africa",
@@ -104,6 +134,7 @@ const project = [
     link: "https://black-africa.vercel.app/",
     type: "Done",
     github: "https://github.com/timothy-okoduwa/black-africa",
+    npm: "",
   },
 ];
 export default project;
