@@ -13,13 +13,13 @@
 
 - 👯 I’m looking to collaborate on **web and mobile projects**
 
-- 👨‍💻 All of my projects are available at [t8m0thy0k0duwa.netlify.app](t8m0thy0k0duwa.netlify.app)
+- 👨‍💻 All of my projects are available at [t8m0thy0k0duwa.netlify.app](https://timothy-okoduwa.netlify.app/)
 
 - 💬 Ask me about **react,next,firebase,REACT-NATIVE**
 
 - 📫 How to reach me **timmyleeokoduwa7@gmail.com**
 
-- 📄 Know about my experiences [t8m0thy0k0duwa.netlify.app](t8m0thy0k0duwa.netlify.app)
+- 📄 Know about my experiences [t8m0thy0k0duwa.netlify.app](https://timothy-okoduwa.netlify.app/)
 
 - ⚡ Fun fact **I'm really funny**
 
