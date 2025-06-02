@@ -28,6 +28,15 @@ const project = [
     github: "",
     npm: "https://www.npmjs.com/package/vestarplus-design-system/",
   },
+    {
+  "name": "inteck-design-system-mobile",
+  "description": "LAD mobile component library — a design‑system package providing reusable UI components optimized for mobile applications, last published April 8, 2021. Minimal dependencies, ISC‑licensed.",
+  "link": "https://inteck-design-system-web.onrender.com/",
+  "type": "Done + Open",
+  "github": "",
+  "npm": "https://www.npmjs.com/package/design-system-mobile"
+},
+
   {
     name: "weddingflix",
     description:
