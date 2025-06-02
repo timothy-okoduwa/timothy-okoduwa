@@ -81,7 +81,7 @@ const project = [
   "type": "Done + Private",
   "github": "",
   "npm": ""
-}
+},
 
   {
     name: "Renthall",
