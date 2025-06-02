@@ -23,7 +23,7 @@ const project = [
     name: "weddingflix",
     description:
       "WeddingFlix allows couples to create personalized wedding websites to share event details, manage RSVPs, and provide essential guest information with customizable templates.",
-    link: "https://www.weddingflix.me/",
+    link: "https://weddingflix.vercel.app/",
     type: "Done + Private",
     github: "",
     npm: "",
@@ -50,7 +50,7 @@ const project = [
     name: "Original Aso Ebi",
     description:
       "Original Aso-Ebi is a top fabric store in Lagos Island, Nigeria, offering a wide range of high-quality traditional and modern fabrics for weddings and cultural events. They blend heritage with fashion and focus on customer satisfaction with personalized service",
-    link: "https://original-aso-ebi.vercel.app/",
+    link: "https://originalasoebi.com/",
     type: "Done + Private",
     github: "",
     npm: "",
@@ -64,24 +64,25 @@ const project = [
     github: "",
     npm: "",
   },
+ {
+  "name": "Falcon Wood Exploration Company",
+  "description": "Falcon Wood is a Nigerian-based energy services company specializing in advanced well intervention, drilling support, and reservoir optimization. Their offerings include coiled tubing, slickline, wireline, and thru-tubing tool services, as well as OCTG management, conductor piling, and marine logistics. They focus on delivering safe, efficient, and innovative solutions for oil and gas operations worldwide.",
+  "link": "https://www.falconwood.ch/",
+  "type": "Done + Private",
+  "github": "",
+  "npm": ""
+}
+
   {
     name: "Renthall",
     description:
       "RentHall is a web app that helps landlords manage tenant info, track payments, and handle property details efficiently, simplifying rental property administration.",
-    link: "https://renthall.vercel.app/",
+    link: "https://renthall.ng/search",
     type: "WIP + Private",
     github: "",
     npm: "",
   },
-  {
-    name: "AMT Logistics",
-    description:
-      "AMT Logistics is a global provider of integrated logistics, transport, and marine services, specializing in end-to-end supply chain solutions.",
-    link: "https://amt-logistics.vercel.app/",
-    type: "Done + Private",
-    github: "",
-    npm: "",
-  },
+
   {
     name: "Beternal",
     description:
@@ -91,24 +92,8 @@ const project = [
     github: "",
     npm: "",
   },
-  {
-    name: "Gbionik",
-    description:
-      "Gbionik is a MedTech startup in Cameroon offering early cancer detection through advanced blood tests for over 60 cancer types, aiming to improve survival rates.",
-    link: "https://gbionik.vercel.app/",
-    type: "Done",
-    github: "https://github.com/timothy-okoduwa/gbionik",
-    npm: "",
-  },
-  {
-    name: "IWOMI",
-    description:
-      "IWOMI Technologies is a fintech company offering a platform for businesses to create and scale digital banking services across Central Africa, including payments, lending, and remittance solutions.",
-    link: "https://iwomi.vercel.app/",
-    type: "Done",
-    github: "https://github.com/timothy-okoduwa/iwomi",
-    npm: "",
-  },
+
+
   {
     name: "Hair Master",
     description:
@@ -127,14 +112,6 @@ const project = [
     github: "",
     npm: "",
   },
-  {
-    name: "Black.Africa",
-    description:
-      "Black is a financial app that allows users to manage their money, access their salary anytime, and grow their wealth.",
-    link: "https://black-africa.vercel.app/",
-    type: "Done",
-    github: "https://github.com/timothy-okoduwa/black-africa",
-    npm: "",
-  },
+ 
 ];
 export default project;
