@@ -1,6 +1,15 @@
 /** @format */
 
 const project = [
+    {
+    name: "Oneway Template",
+    description:
+      "OneWayTemplate is a Nigerian platform offering professionally designed templates for Canva, PSD, Figma, XD, Google Docs, and more. Tailored for content creators, marketers, and designers",
+    link: "https://www.onewaytemplate.com/",
+    type: "Done + Private",
+    github: "",
+    npm: "",
+  },
   {
     name: "Vestarplus",
     description:
@@ -37,15 +46,7 @@ const project = [
     github: "",
     npm: "",
   },
-  {
-    name: "Oneway Template",
-    description:
-      "OneWayTemplate is a Nigerian platform offering professionally designed templates for Canva, PSD, Figma, XD, Google Docs, and more. Tailored for content creators, marketers, and designers",
-    link: "https://www.onewaytemplate.com/",
-    type: "Done + Private",
-    github: "",
-    npm: "",
-  },
+
   {
     name: "Original Aso Ebi",
     description:
