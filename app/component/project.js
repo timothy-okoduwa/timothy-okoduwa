@@ -1,6 +1,15 @@
 /** @format */
 
 const project = [
+       {
+    name: "Snippad",
+    description:
+      "Snippad is a collaborative code snippet vault for developers. The idea is simple: you can save and organize your code snippets, choose to make them public or private, and even share them with specific users via email — like a private GitHub Gist with access control. But we’re going further. Snippad allows live editing (like Figma, but for code), inline comments, and real-time previews for HTML, CSS, JavaScript, and even React components. It’s built for solo devs and teams who want a faster way to experiment, share, and reuse code.",
+    link: "https://snippad.netlify.app/",
+    type: "Done + Private",
+    github: "",
+    npm: "",
+  },
     {
     name: "Oneway Template",
     description:
