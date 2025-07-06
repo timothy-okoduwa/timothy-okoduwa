@@ -33,8 +33,8 @@ const MainPage = () => {
             curiosity. <br /> My ultimate aim is to refine my skills and reach
             the pinnacle of engineering excellence. <br /> <br /> At the moment,
             I’m building something exciting — a software called{" "}
-            <a href="https://original-aso-ebi.vercel.app/" className="email">
-              OAE (Original Aso Ebi)
+            <a href="https://snippad.cloud/" className="email">
+             Snippad
             </a>
             . <br />
             <br /> While I primarily work in the TypeScript/JavaScript
