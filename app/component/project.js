@@ -5,8 +5,27 @@ const project = [
     name: "Snippad",
     description:
       "Snippad is a collaborative code snippet vault for developers. The idea is simple: you can save and organize your code snippets, choose to make them public or private, and even share them with specific users via email — like a private GitHub Gist with access control. But we’re going further. Snippad allows live editing (like Figma, but for code), inline comments, and real-time previews for HTML, CSS, JavaScript, and even React components. It’s built for solo devs and teams who want a faster way to experiment, share, and reuse code.",
-    link: "https://snippad.netlify.app/",
+    link: "https://snippad.cloud/",
     type: "Done + Private",
+    github: "",
+    npm: "",
+  },
+         {
+    name: "Original Aso Ebi",
+    description:
+      "Original Aso-Ebi is a top fabric store in Lagos Island, Nigeria, offering a wide range of high-quality traditional and modern fabrics for weddings and cultural events. They blend heritage with fashion and focus on customer satisfaction with personalized service",
+    link: "https://originalasoebi.com/",
+    type: "Done + Private",
+    github: "",
+    npm: "",
+  },
+       
+  {
+    name: "Renthall",
+    description:
+      "RentHall is a web app that helps landlords manage tenant info, track payments, and handle property details efficiently, simplifying rental property administration.",
+    link: "https://renthall.ng/search",
+    type: "WIP + Private",
     github: "",
     npm: "",
   },
@@ -15,6 +34,15 @@ const project = [
     description:
       "OneWayTemplate is a Nigerian platform offering professionally designed templates for Canva, PSD, Figma, XD, Google Docs, and more. Tailored for content creators, marketers, and designers",
     link: "https://www.onewaytemplate.com/",
+    type: "Done + Private",
+    github: "",
+    npm: "",
+  },
+         {
+    name: "weddingflix",
+    description:
+      "WeddingFlix allows couples to create personalized wedding websites to share event details, manage RSVPs, and provide essential guest information with customizable templates.",
+    link: "https://weddingflix.vercel.app/",
     type: "Done + Private",
     github: "",
     npm: "",
@@ -46,15 +74,7 @@ const project = [
   "npm": "https://www.npmjs.com/package/design-system-mobile"
 },
 
-  {
-    name: "weddingflix",
-    description:
-      "WeddingFlix allows couples to create personalized wedding websites to share event details, manage RSVPs, and provide essential guest information with customizable templates.",
-    link: "https://weddingflix.vercel.app/",
-    type: "Done + Private",
-    github: "",
-    npm: "",
-  },
+
   {
     name: "vplusacademy",
     description:
@@ -65,15 +85,7 @@ const project = [
     npm: "",
   },
 
-  {
-    name: "Original Aso Ebi",
-    description:
-      "Original Aso-Ebi is a top fabric store in Lagos Island, Nigeria, offering a wide range of high-quality traditional and modern fabrics for weddings and cultural events. They blend heritage with fashion and focus on customer satisfaction with personalized service",
-    link: "https://originalasoebi.com/",
-    type: "Done + Private",
-    github: "",
-    npm: "",
-  },
+
   {
     name: "FDGS Energy group",
     description:
@@ -92,15 +104,6 @@ const project = [
   "npm": ""
 },
 
-  {
-    name: "Renthall",
-    description:
-      "RentHall is a web app that helps landlords manage tenant info, track payments, and handle property details efficiently, simplifying rental property administration.",
-    link: "https://renthall.ng/search",
-    type: "WIP + Private",
-    github: "",
-    npm: "",
-  },
 
   {
     name: "Beternal",
