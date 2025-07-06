@@ -54,7 +54,7 @@ const MainPage = () => {
                   <div className="mt-3">
                     <div className="borr">
                       <a
-                        href={proj.link}
+                        href={proj.link} target='_blank'
                         style={{ textDecoration: "none", color: "inherit" }}
                       >
                         <span>Webisite</span>{" "}
