@@ -13,8 +13,8 @@ const MainPage = () => {
             <div>
               <div className="nameofdev">Timothy Okoduwa</div>
               <div className="conff">
-                <a href="mailto:timmyleeokoduwa7@gmail.com" className="email">
-                  timmyleeokoduwa7@gmail.com
+                <a href="mailto:timothyokoduwa4@gmail.com" className="email">
+                  timothyokoduwa4@gmail.com
                 </a>
               </div>
             </div>
