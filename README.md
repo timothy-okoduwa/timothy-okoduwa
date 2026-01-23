@@ -11,11 +11,11 @@
 
 I'm a passionate frontend developer from Nigeria, specializing in building modern, responsive web and mobile applications. I love turning complex problems into simple, beautiful, and intuitive solutions.
 
-- 🔭 Currently working on **OAE**
+- 🔭 Currently working on **[commifdiff](https://commitdiff.vercel.app/)**
 - 👯 Open to collaborating on **web and mobile projects**
 - 💼 Portfolio: [timothy-okoduwa.netlify.app](https://timothy-okoduwa.netlify.app/)
 - 💬 Ask me about **React, Next.js, Firebase, React Native**
-- 📫 Reach me at: **timmyleeokoduwa7@gmail.com**
+- 📫 Reach me at: **timothyokoduwa4@gmail.com**
 - ⚡ Fun fact: **I bring humor to code reviews!**
 
 ---
