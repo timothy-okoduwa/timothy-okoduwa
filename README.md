@@ -1,38 +1,75 @@
-<!-- @format -->
+# Hi 👋, I'm Timothy Okoduwa
 
-<h1 align="center">Hi 👋 There, I'm Timothy okoduwa</h1>
-<h3 align="center">A passionate frontend developer from Nigeria</h3>
+### Frontend Developer | React Specialist | Building Digital Experiences
 
-<p align="left"> <img src="https://komarev.com/ghpvc/?username=timothy-okoduwa&label=Profile%20views&color=0e75b6&style=flat" alt="timothy-okoduwa" /> </p>
+[![Profile Views](https://komarev.com/ghpvc/?username=timothy-okoduwa&label=Profile%20views&color=0e75b6&style=flat)](https://github.com/timothy-okoduwa)
+[![Twitter Follow](https://img.shields.io/twitter/follow/timothyokoduwa?logo=twitter&style=for-the-badge)](https://twitter.com/timothyokoduwa)
 
-<p align="left"> <a href="https://twitter.com/timothyokoduwa" target="blank"><img src="https://img.shields.io/twitter/follow/timothyokoduwa?logo=twitter&style=for-the-badge" alt="timothyokoduwa" /></a> </p>
+---
 
-- 🔭 I’m currently working on [OAE]
+## 🚀 About Me
 
-- 🌱 I’m currently learning **Dart,Flutter,THREE.JS**
+I'm a passionate frontend developer from Nigeria, specializing in building modern, responsive web and mobile applications. I love turning complex problems into simple, beautiful, and intuitive solutions.
 
-- 👯 I’m looking to collaborate on **web and mobile projects**
+- 🔭 Currently working on **OAE**
+- 👯 Open to collaborating on **web and mobile projects**
+- 💼 Portfolio: [timothy-okoduwa.netlify.app](https://timothy-okoduwa.netlify.app/)
+- 💬 Ask me about **React, Next.js, Firebase, React Native**
+- 📫 Reach me at: **timmyleeokoduwa7@gmail.com**
+- ⚡ Fun fact: **I bring humor to code reviews!**
 
-- 👨‍💻 All of my projects are available at [timothy-okoduwa.netlify.app](https://timothy-okoduwa.netlify.app/)
+---
 
-- 💬 Ask me about **react,next,firebase,REACT-NATIVE**
+## 🛠️ Tech Stack
 
-- 📫 How to reach me **timmyleeokoduwa7@gmail.com**
+### Frontend Development
 
-- 📄 Know about my experiences [timothy-okoduwa.netlify.app](https://timothy-okoduwa.netlify.app/)
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)
+![React Native](https://img.shields.io/badge/React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 
-- ⚡ Fun fact **I'm really funny**
+### Styling & UI
 
-<h3 align="left">Connect with me:</h3>
-<p align="left">
-<a href="https://twitter.com/timothyokoduwa" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/twitter.svg" alt="timothyokoduwa" height="30" width="40" /></a>
-<a href="https://linkedin.com/in/https://www.linkedin.com/in/timothy-okoduwa-3845ab215/" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="https://www.linkedin.com/in/timothy-okoduwa-3845ab215/" height="30" width="40" /></a>
-<a href="https://fb.com/https://web.facebook.com/timmy.lee.37669528" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/facebook.svg" alt="https://web.facebook.com/timmy.lee.37669528" height="30" width="40" /></a>
-<a href="https://instagram.com/https://www.instagram.com/timothy_okoduwa/" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/instagram.svg" alt="https://www.instagram.com/timothy_okoduwa/" height="30" width="40" /></a>
-</p>
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)
 
-<h3 align="left">Languages and Tools:</h3>
-<p align="left"> <a href="https://getbootstrap.com" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/bootstrap/bootstrap-plain-wordmark.svg" alt="bootstrap" width="40" height="40"/> </a> <a href="https://www.w3schools.com/css/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/css3/css3-original-wordmark.svg" alt="css3" width="40" height="40"/> </a> <a href="https://dart.dev" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/dartlang/dartlang-icon.svg" alt="dart" width="40" height="40"/> </a> <a href="https://firebase.google.com/" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/firebase/firebase-icon.svg" alt="firebase" width="40" height="40"/> </a> <a href="https://flutter.dev" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/flutterio/flutterio-icon.svg" alt="flutter" width="40" height="40"/> </a> <a href="https://git-scm.com/" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/git-scm/git-scm-icon.svg" alt="git" width="40" height="40"/> </a> <a href="https://www.w3.org/html/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original-wordmark.svg" alt="html5" width="40" height="40"/> </a> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="javascript" width="40" height="40"/> </a> <a href="https://nextjs.org/" target="_blank" rel="noreferrer"> <img src="https://cdn.worldvectorlogo.com/logos/nextjs-2.svg" alt="nextjs" width="40" height="40"/> </a> <a href="https://reactjs.org/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original-wordmark.svg" alt="react" width="40" height="40"/> </a> <a href="https://reactnative.dev/" target="_blank" rel="noreferrer"> <img src="https://reactnative.dev/img/header_logo.svg" alt="reactnative" width="40" height="40"/> </a> <a href="https://redux.js.org" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/redux/redux-original.svg" alt="redux" width="40" height="40"/> </a> <a href="https://www.typescriptlang.org/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/typescript/typescript-original.svg" alt="typescript" width="40" height="40"/> </a> </p>
+### State Management & Backend
 
-<h3 align="left">Support:</h3>
-<p><a href="https://www.buymeacoffee.com/t8mothy0k0duwa"> <img align="left" src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="50" width="210" alt="t8mothy0k0duwa" /></a></p><br><br>
+![Redux](https://img.shields.io/badge/Redux-593D88?style=for-the-badge&logo=redux&logoColor=white)
+![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
+
+### Tools & Version Control
+
+![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
+
+---
+
+## 📊 GitHub Stats
+
+![Timothy's GitHub stats](https://github-readme-stats.vercel.app/api?username=timothy-okoduwa&show_icons=true&theme=radical)
+
+![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=timothy-okoduwa&layout=compact&theme=radical)
+
+---
+
+## 🤝 Connect With Me
+
+[![Twitter](https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/timothyokoduwa)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/timothy-okoduwa-3845ab215/)
+[![Facebook](https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white)](https://web.facebook.com/timmy.lee.37669528)
+[![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/timothy_okoduwa/)
+
+---
+
+<div align="center">
+  <img src="https://quotes-github-readme.vercel.app/api?type=horizontal&theme=radical" alt="Random Dev Quote"/>
+</div>
+
+<div align="center">
+
+### 💡 "Code is like humor. When you have to explain it, it's bad." – Cory House
+
+</div><!-- @format -->
