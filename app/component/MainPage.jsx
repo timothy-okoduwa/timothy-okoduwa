@@ -4,6 +4,16 @@ import React from "react";
 import project from "./project";
 import Image from "next/image";
 import p from "./mypic.png";
+
+const techStack = [
+  { name: "TypeScript", color: "#3178c6" },
+  { name: "JavaScript", color: "#f7df1e" },
+  { name: "React", color: "#61dafb" },
+  { name: "Next.js", color: "#000000" },
+  { name: "React native", color: "#339933" },
+  { name: "Tailwind CSS", color: "#06b6d4" },
+];
+
 const MainPage = () => {
   return (
     <div>
@@ -25,22 +35,58 @@ const MainPage = () => {
           </div>
 
           <div className="infoss">
-            Hello and welcome to my digital space! I’m Timothy Okoduwa, a
+            Hello and welcome to my digital space! I'm Timothy Okoduwa, a
             passionate problem solver who thrives on creating impactful software
             solutions. <br /> <br />
-            I’m always on the hunt for knowledge, whether it’s through
+            I'm always on the hunt for knowledge, whether it's through
             tutorials, documentation, articles, or any resource that feeds my
             curiosity. <br /> My ultimate aim is to refine my skills and reach
             the pinnacle of engineering excellence. <br /> <br /> At the moment,
-            I’m building something exciting — a software called{" "}
+            I'm building something exciting — a software called{" "}
             <a href="https://snippad.cloud/" className="email">
-             Snippad
+              Snippad
             </a>
             . <br />
             <br /> While I primarily work in the TypeScript/JavaScript
-            ecosystem, <br /> I’m also diving into other fascinating languages
+            ecosystem, <br /> I'm also diving into other fascinating languages
             like Dart, Python, and Solidity.
           </div>
+
+          <div className="projj" style={{ marginTop: "50px" }}>
+            <div className="lettl">Tech Stack</div>
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "10px",
+                marginTop: "20px",
+              }}
+            >
+              {techStack.map((tech, i) => (
+                <div
+                  key={i}
+                  className="borr"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "8px",
+                      height: "8px",
+                      borderRadius: "50%",
+                      backgroundColor: tech.color,
+                      animation: "pulse 2s ease-in-out infinite",
+                    }}
+                  />
+                  {tech.name}
+                </div>
+              ))}
+            </div>
+          </div>
+
           <div className="projj">
             <div className="lettl">Projects</div>
             <div>
@@ -54,7 +100,8 @@ const MainPage = () => {
                   <div className="mt-3">
                     <div className="borr">
                       <a
-                        href={proj.link} target='_blank'
+                        href={proj.link}
+                        target="_blank"
                         style={{ textDecoration: "none", color: "inherit" }}
                       >
                         <span>Webisite</span>{" "}

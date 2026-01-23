@@ -1,101 +1,285 @@
 /** @format */
 body {
-  background-color: #111111;
+  background-color: #0a0a0a;
+  background-image:
+    radial-gradient(at 20% 30%, rgba(244, 165, 229, 0.03) 0px, transparent 50%),
+    radial-gradient(at 80% 70%, rgba(182, 174, 170, 0.03) 0px, transparent 50%);
+  background-attachment: fixed;
 }
+
 .cantsyat {
   display: flex;
   justify-content: center;
   width: 100%;
 }
+
 @media screen and (max-width: 991px) {
   .mainn {
     width: 90% !important;
   }
 }
+
 .mainn {
   width: 50%;
   margin-top: 29px;
+  animation: fadeIn 0.8s ease-out;
 }
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .nameofdev {
   font-size: 24px;
   font-weight: 500;
   font-family: "IBM Plex Mono", serif;
   color: #e9e1e1;
+  animation: slideInLeft 0.6s ease-out;
+  letter-spacing: -0.5px;
+  text-shadow: 0 0 30px rgba(244, 165, 229, 0.1);
 }
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 .conff {
   margin-top: 20px !important;
+  animation: slideInLeft 0.6s ease-out 0.1s both;
 }
+
 .email {
   color: #b6aeaa;
   font-size: 16px;
   font-family: "IBM Plex Mono", serif;
+  transition: all 0.3s ease;
+  position: relative;
+  display: inline-block;
 }
+
+.email::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 1px;
+  bottom: -2px;
+  left: 0;
+  background: linear-gradient(90deg, #f4a5e5, #b6aeaa);
+  transition: width 0.3s ease;
+}
+
 .email:hover {
   color: #f4a5e5 !important;
+  transform: translateX(3px);
 }
+
+.email:hover::after {
+  width: 100%;
+}
+
 .eifj {
   color: inherit;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: block;
 }
+
 .eifj:hover {
   color: #f4a5e5 !important;
+  transform: translateX(5px);
 }
+
 .infoss {
   margin-top: 40px;
   font-size: 14px;
   font-family: "IBM Plex Mono", serif;
   color: #e9e1e1;
+  line-height: 1.8;
+  animation: fadeIn 0.8s ease-out 0.3s both;
+  padding: 20px;
+  background: rgba(182, 174, 170, 0.02);
+  border-left: 2px solid rgba(244, 165, 229, 0.2);
+  border-radius: 2px;
 }
+
 .projj {
   margin-top: 50px;
 }
+
 .lettl {
   color: #e9e1e1;
   font-size: 20px;
   font-family: "IBM Plex Mono", serif;
   font-weight: 500;
+  position: relative;
+  padding-bottom: 15px;
+  margin-bottom: 10px;
 }
+
+.lettl::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  height: 2px;
+  background: linear-gradient(90deg, #f4a5e5, #b6aeaa, transparent);
+  animation: expandWidth 0.6s ease-out;
+}
+
+@keyframes expandWidth {
+  from {
+    width: 0;
+  }
+  to {
+    width: 50px;
+  }
+}
+
 .secondp {
   display: flex;
   margin-top: 30px;
   gap: 10px;
+  animation: slideUp 0.5s ease-out both;
+  align-items: baseline;
 }
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .firstc {
   font-size: 16px;
   font-family: "IBM Plex Mono", serif;
   color: #e9e1e1;
+  transition: color 0.3s ease;
+  font-weight: 500;
 }
+
+.secondp:hover .firstc {
+  color: #f4a5e5;
+}
+
 .secondc {
   font-size: 10px;
   font-family: "IBM Plex Mono", serif;
-  color: #e9e1e1;
+  color: #b6aeaa;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+  padding: 2px 6px;
+  background: rgba(182, 174, 170, 0.1);
+  border-radius: 3px;
 }
+
+.secondp:hover .secondc {
+  opacity: 1;
+  background: rgba(244, 165, 229, 0.1);
+}
+
 .expp {
   font-size: 14px;
   font-family: "IBM Plex Mono", serif;
   color: #b6aeaa;
   margin-top: 10px;
+  line-height: 1.6;
+  padding-left: 2px;
 }
+
 .borr {
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-  background-color: #b6aeaa1a;
+  padding: 6px 12px;
+  background: linear-gradient(
+    135deg,
+    rgba(182, 174, 170, 0.08),
+    rgba(182, 174, 170, 0.12)
+  );
   width: fit-content;
   color: #b6aeaa;
   font-size: 13px;
   font-family: "IBM Plex Mono", serif;
   cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(182, 174, 170, 0.15);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
 }
+
+.borr::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(244, 165, 229, 0.15),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.borr:hover::before {
+  left: 100%;
+}
+
+.borr:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(244, 165, 229, 0.12),
+    rgba(182, 174, 170, 0.15)
+  );
+  border-color: rgba(244, 165, 229, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(244, 165, 229, 0.1);
+  color: #f4a5e5;
+}
+
+.borr svg {
+  transition: transform 0.3s ease;
+}
+
+.borr:hover svg {
+  transform: scale(1.15);
+}
+
 .mt-3 {
   margin-top: 20px;
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 12px;
+  flex-wrap: wrap;
 }
+
 .kfie {
-  margin-top: 40px;
+  margin-top: 50px;
+  padding-top: 30px;
+  border-top: 1px solid rgba(182, 174, 170, 0.1);
 }
+
 .bugsss {
   color: #b6aeaa;
   font-size: 16px;
@@ -103,37 +287,158 @@ body {
   display: flex;
   gap: 10px;
   align-items: center;
+  transition: all 0.3s ease;
+  padding: 8px 12px;
+  background: rgba(182, 174, 170, 0.04);
+  border-radius: 6px;
+  border: 1px solid transparent;
 }
+
+.eifj:hover .bugsss {
+  background: rgba(244, 165, 229, 0.08);
+  border-color: rgba(244, 165, 229, 0.2);
+}
+
+.bugsss svg {
+  transition: all 0.3s ease;
+}
+
+.eifj:hover .bugsss svg {
+  transform: scale(1.2) rotate(-5deg);
+  filter: drop-shadow(0 0 8px rgba(244, 165, 229, 0.4));
+}
+
 .ouuu {
   margin-top: 50px;
   margin-bottom: 30px;
+  animation: fadeIn 1s ease-out;
 }
+
 .lineee {
   width: 100%;
-  height: 0.5px;
-  background-color: #e9e1e1;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(182, 174, 170, 0.3),
+    transparent
+  );
+  animation: expandLine 1s ease-out;
 }
+
+@keyframes expandLine {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
 .rights {
-  color: #e9e1e1;
+  color: #b6aeaa;
   font-size: 14px;
   font-family: "IBM Plex Mono", serif;
+  opacity: 0.7;
 }
+
 .djhdud {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
 .forimage {
   height: 100px;
   width: 100px;
   border-radius: 50%;
-  background-color: #e9e1e1;
+  background: linear-gradient(135deg, #e9e1e1, #b6aeaa);
   flex-wrap: wrap;
   gap: 30px;
+  position: relative;
+  animation: scaleIn 0.6s ease-out 0.2s both;
+  transition: transform 0.3s ease;
+  box-shadow: 0 0 0 3px rgba(244, 165, 229, 0.1);
 }
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.forimage::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: conic-gradient(from 180deg, #f4a5e5, #b6aeaa, #f4a5e5);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+  filter: blur(4px);
+}
+
+.forimage:hover::before {
+  opacity: 0.7;
+  animation: rotate 4s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.forimage:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 0 3px rgba(244, 165, 229, 0.3);
+}
+
 .forimage img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 50%;
+  transition: filter 0.3s ease;
+}
+
+.forimage:hover img {
+  filter: brightness(1.1) saturate(1.1);
+}
+
+/* Stagger animation for project items */
+.projj > div > div:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.projj > div > div:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.projj > div > div:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.projj > div > div:nth-child(4) {
+  animation-delay: 0.4s;
+}
+.projj > div > div:nth-child(5) {
+  animation-delay: 0.5s;
+}
+.projj > div > div:nth-child(6) {
+  animation-delay: 0.6s;
+}
+
+/* Add subtle glow to interactive elements */
+.borr:hover,
+.eifj:hover .bugsss {
+  box-shadow:
+    0 0 20px rgba(244, 165, 229, 0.1),
+    0 4px 12px rgba(0, 0, 0, 0.2);
 }

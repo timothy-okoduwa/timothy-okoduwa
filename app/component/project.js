@@ -1,7 +1,26 @@
 /** @format */
 
 const project = [
-       {
+  {
+    name: "DotSnap",
+    description:
+      "An open-source developer utility and web tool to mask .env files so you can safely share configuration files without exposing secrets. It supports CLI, web UI, and NPX usage for secure environment masking. :contentReference[oaicite:0]{index=0}",
+    link: "https://dotsnap.netlify.app/",
+    type: "Developer utility / web tool",
+    github: "https://github.com/timothy-okoduwa/dotsnap",
+    npm: "https://www.npmjs.com/package/dotsnap",
+  },
+  {
+    name: "CommitDiff",
+    description:
+      "AI-powered developer tool that analyzes your staged code changes and automatically generates professional, conventional git commit messages in seconds, with both CLI and web interfaces. :contentReference[oaicite:1]{index=1}",
+    link: "https://commitdiff.vercel.app/",
+    type: "AI developer tool",
+    github: "https://github.com/timothy-okoduwa/commitdiff",
+    npm: "https://www.npmjs.com/package/commitdiff",
+  },
+
+  {
     name: "Snippad",
     description:
       "Snippad is a collaborative code snippet vault for developers. The idea is simple: you can save and organize your code snippets, choose to make them public or private, and even share them with specific users via email — like a private GitHub Gist with access control. But we’re going further. Snippad allows live editing (like Figma, but for code), inline comments, and real-time previews for HTML, CSS, JavaScript, and even React components. It’s built for solo devs and teams who want a faster way to experiment, share, and reuse code.",
@@ -10,7 +29,7 @@ const project = [
     github: "",
     npm: "",
   },
-         {
+  {
     name: "Original Aso Ebi",
     description:
       "Original Aso-Ebi is a top fabric store in Lagos Island, Nigeria, offering a wide range of high-quality traditional and modern fabrics for weddings and cultural events. They blend heritage with fashion and focus on customer satisfaction with personalized service",
@@ -19,7 +38,7 @@ const project = [
     github: "",
     npm: "",
   },
-       
+
   {
     name: "Renthall",
     description:
@@ -29,7 +48,7 @@ const project = [
     github: "",
     npm: "",
   },
-    {
+  {
     name: "Oneway Template",
     description:
       "OneWayTemplate is a Nigerian platform offering professionally designed templates for Canva, PSD, Figma, XD, Google Docs, and more. Tailored for content creators, marketers, and designers",
@@ -38,7 +57,7 @@ const project = [
     github: "",
     npm: "",
   },
-         {
+  {
     name: "weddingflix",
     description:
       "WeddingFlix allows couples to create personalized wedding websites to share event details, manage RSVPs, and provide essential guest information with customizable templates.",
@@ -65,15 +84,15 @@ const project = [
     github: "",
     npm: "https://www.npmjs.com/package/vestarplus-design-system/",
   },
-    {
-  "name": "inteck-design-system-mobile",
-  "description": "LAD mobile component library — a design‑system package providing reusable UI components optimized for mobile applications, last published April 8, 2021. Minimal dependencies, ISC‑licensed.",
-  "link": "https://inteck-design-system-web.onrender.com/",
-  "type": "Done + Open",
-  "github": "",
-  "npm": "https://www.npmjs.com/package/design-system-mobile"
-},
-
+  {
+    name: "inteck-design-system-mobile",
+    description:
+      "LAD mobile component library — a design‑system package providing reusable UI components optimized for mobile applications, last published April 8, 2021. Minimal dependencies, ISC‑licensed.",
+    link: "https://inteck-design-system-web.onrender.com/",
+    type: "Done + Open",
+    github: "",
+    npm: "https://www.npmjs.com/package/design-system-mobile",
+  },
 
   {
     name: "vplusacademy",
@@ -85,7 +104,6 @@ const project = [
     npm: "",
   },
 
-
   {
     name: "FDGS Energy group",
     description:
@@ -95,15 +113,15 @@ const project = [
     github: "",
     npm: "",
   },
- {
-  "name": "Falcon Wood Exploration Company",
-  "description": "Falcon Wood is a Nigerian-based energy services company specializing in advanced well intervention, drilling support, and reservoir optimization. Their offerings include coiled tubing, slickline, wireline, and thru-tubing tool services, as well as OCTG management, conductor piling, and marine logistics. They focus on delivering safe, efficient, and innovative solutions for oil and gas operations worldwide.",
-  "link": "https://www.falconwood.ch/",
-  "type": "Done + Private",
-  "github": "",
-  "npm": ""
-},
-
+  {
+    name: "Falcon Wood Exploration Company",
+    description:
+      "Falcon Wood is a Nigerian-based energy services company specializing in advanced well intervention, drilling support, and reservoir optimization. Their offerings include coiled tubing, slickline, wireline, and thru-tubing tool services, as well as OCTG management, conductor piling, and marine logistics. They focus on delivering safe, efficient, and innovative solutions for oil and gas operations worldwide.",
+    link: "https://www.falconwood.ch/",
+    type: "Done + Private",
+    github: "",
+    npm: "",
+  },
 
   {
     name: "Beternal",
@@ -114,7 +132,6 @@ const project = [
     github: "",
     npm: "",
   },
-
 
   {
     name: "Hair Master",
@@ -134,6 +151,5 @@ const project = [
     github: "",
     npm: "",
   },
- 
 ];
 export default project;
