@@ -104,7 +104,7 @@ const MainPage = () => {
                         target="_blank"
                         style={{ textDecoration: "none", color: "inherit" }}
                       >
-                        <span>Webisite</span>{" "}
+                        <span>Link</span>{" "}
                         <span className="mx-1">
                           <svg
                             width="10"

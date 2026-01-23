@@ -4,7 +4,7 @@ const project = [
   {
     name: "DotSnap",
     description:
-      "An open-source developer utility and web tool to mask .env files so you can safely share configuration files without exposing secrets. It supports CLI, web UI, and NPX usage for secure environment masking. :contentReference[oaicite:0]{index=0}",
+      "An open-source developer utility and web tool to mask .env files so you can safely share configuration files without exposing secrets. It supports CLI, web UI, and NPX usage for secure environment masking.",
     link: "https://dotsnap.netlify.app/",
     type: "Developer utility / web tool",
     github: "https://github.com/timothy-okoduwa/dotsnap",
@@ -13,7 +13,7 @@ const project = [
   {
     name: "CommitDiff",
     description:
-      "AI-powered developer tool that analyzes your staged code changes and automatically generates professional, conventional git commit messages in seconds, with both CLI and web interfaces. :contentReference[oaicite:1]{index=1}",
+      "AI-powered developer tool that analyzes your staged code changes and automatically generates professional, conventional git commit messages in seconds, with both CLI and web interfaces.",
     link: "https://commitdiff.vercel.app/",
     type: "AI developer tool",
     github: "https://github.com/timothy-okoduwa/commitdiff",
@@ -26,6 +26,33 @@ const project = [
       "Snippad is a collaborative code snippet vault for developers. The idea is simple: you can save and organize your code snippets, choose to make them public or private, and even share them with specific users via email — like a private GitHub Gist with access control. But we’re going further. Snippad allows live editing (like Figma, but for code), inline comments, and real-time previews for HTML, CSS, JavaScript, and even React components. It’s built for solo devs and teams who want a faster way to experiment, share, and reuse code.",
     link: "https://snippad.cloud/",
     type: "Done + Private",
+    github: "",
+    npm: "",
+  },
+  {
+    name: "EstateOne",
+    description:
+      "Estate management system for property administrators to streamline visitor check-ins, maintenance, emergency alerts, and access control — designed to simplify property admin workflows. (Productivity category on Google Play)",
+    link: "https://play.google.com/store/apps/details?id=com.estatemanage.app&hl=en",
+    type: "Mobile App (Productivity / Estate Management)",
+    github: "",
+    npm: "",
+  },
+  {
+    name: "WorkOnPro Android",
+    description:
+      "WorkOnPro connects companies and individuals with registered professionals, lets users create and share work orders, monitor progress, and pay for completed services — protecting both parties. (Android version)",
+    link: "https://play.google.com/store/apps/details?id=com.loveth.workonpro&hl=en",
+    type: "Mobile App (Productivity / Services Marketplace)",
+    github: "",
+    npm: "",
+  },
+  {
+    name: "WorkOnPro IOS",
+    description:
+      "WorkOnPro provides services to create and share work orders with registered professionals, monitor project progress, and process payments between parties. (iOS version)",
+    link: "https://apps.apple.com/ng/app/workonpro/id6443591286",
+    type: "Mobile App (Productivity / Services Marketplace)",
     github: "",
     npm: "",
   },
@@ -91,7 +118,7 @@ const project = [
     link: "https://inteck-design-system-web.onrender.com/",
     type: "Done + Open",
     github: "",
-    npm: "https://www.npmjs.com/package/design-system-mobile",
+    npm: "https://www.npmjs.com/package/inteck-design-system-mobile",
   },
 
   {
