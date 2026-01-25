@@ -2,6 +2,15 @@
 
 const project = [
   {
+    name: "JSON2Table",
+    description:
+      "A developer-friendly data explorer that converts JSON, YAML, XML, CSV, and JavaScript objects into clean tables and visual relationship graphs. It helps developers inspect, edit, and understand complex API and AI-generated data faster.",
+    link: "https://json-2-table.vercel.app/",
+    type: "Developer utility / data visualization tool",
+    github: "https://github.com/timothy-okoduwa/json2table",
+    npm: "",
+  },
+  {
     name: "DotSnap",
     description:
       "An open-source developer utility and web tool to mask .env files so you can safely share configuration files without exposing secrets. It supports CLI, web UI, and NPX usage for secure environment masking.",
