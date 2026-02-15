@@ -1,34 +1,145 @@
 /** @format */
 body {
-  background-color: #0a0a0a;
-  background-image:
-    radial-gradient(at 20% 30%, rgba(244, 165, 229, 0.03) 0px, transparent 50%),
-    radial-gradient(at 80% 70%, rgba(182, 174, 170, 0.03) 0px, transparent 50%);
-  background-attachment: fixed;
+  margin: 0 !important;
+  --bg: #0a0a0a !important;
+  --bg: #f5f0ee !important;
+}
+/* ─── Design tokens ──────────────────────────────────────────────────────── */
+:root {
+  --accent: #f4a5e5;
+  --accent-dim: rgba(244, 165, 229, 0.15);
+  --accent-glow: rgba(244, 165, 229, 0.08);
+
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* ─── Dark theme (default) ───────────────────────────────────────────────── */
+.theme-dark {
+  --bg: #0a0a0a;
+  --bg-mesh-a: rgba(244, 165, 229, 0.035);
+  --bg-mesh-b: rgba(182, 174, 170, 0.025);
+
+  --text-primary: #e9e1e1;
+  --text-muted: #b6aeaa;
+  --text-faint: rgba(182, 174, 170, 0.5);
+
+  --surface: rgba(182, 174, 170, 0.06);
+  --surface-hover: rgba(244, 165, 229, 0.1);
+  --border: rgba(182, 174, 170, 0.12);
+  --border-hover: rgba(244, 165, 229, 0.28);
+
+  --bio-border: rgba(244, 165, 229, 0.2);
+  --bio-bg: rgba(182, 174, 170, 0.025);
+
+  --toggle-bg: rgba(182, 174, 170, 0.12);
+  --toggle-border: rgba(182, 174, 170, 0.2);
+  --toggle-icon: #b6aeaa;
+}
+
+/* ─── Light theme ────────────────────────────────────────────────────────── */
+.theme-light {
+  --bg: #f5f0ee;
+  --bg-mesh-a: rgba(244, 165, 229, 0.07);
+  --bg-mesh-b: rgba(100, 80, 70, 0.04);
+
+  --text-primary: #1a1210;
+  --text-muted: #5a4a44;
+  --text-faint: rgba(90, 74, 68, 0.5);
+
+  --surface: rgba(90, 74, 68, 0.07);
+  --surface-hover: rgba(244, 165, 229, 0.14);
+  --border: rgba(90, 74, 68, 0.14);
+  --border-hover: rgba(244, 165, 229, 0.45);
+
+  --bio-border: rgba(244, 165, 229, 0.35);
+  --bio-bg: rgba(244, 165, 229, 0.04);
+
+  --toggle-bg: rgba(90, 74, 68, 0.09);
+  --toggle-border: rgba(90, 74, 68, 0.18);
+  --toggle-icon: #5a4a44;
+}
+
+/* ─── Base ───────────────────────────────────────────────────────────────── */
+.theme-dark,
+.theme-light {
+  min-height: 100vh;
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(at 18% 28%, var(--bg-mesh-a) 0px, transparent 55%),
+    radial-gradient(at 82% 72%, var(--bg-mesh-b) 0px, transparent 55%),
+    radial-gradient(at 50% 0%, var(--bg-mesh-a) 0px, transparent 40%);
+  background-attachment: fixed;
+  transition:
+    background-color var(--transition),
+    color var(--transition);
+}
+
+/* ─── Theme toggle button ────────────────────────────────────────────────── */
+.theme-toggle {
+  position: fixed;
+  top: 22px;
+  right: 24px;
+  z-index: 100;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  outline: none;
+}
+
+.toggle-track {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--toggle-bg);
+  border: 1px solid var(--toggle-border);
+  color: var(--toggle-icon);
+  transition: all var(--transition);
+  backdrop-filter: blur(8px);
+}
+
+.theme-toggle:hover .toggle-track {
+  background: var(--accent-dim);
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 16px var(--accent-glow);
+  transform: rotate(15deg);
+}
+
+.toggle-thumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ─── Layout ─────────────────────────────────────────────────────────────── */
 .cantsyat {
   display: flex;
   justify-content: center;
   width: 100%;
-}
-
-@media screen and (max-width: 991px) {
-  .mainn {
-    width: 90% !important;
-  }
+  position: relative;
 }
 
 .mainn {
   width: 50%;
-  margin-top: 29px;
-  animation: fadeIn 0.8s ease-out;
+  margin-top: 52px;
+  margin-bottom: 60px;
+  animation: fadeUp 0.7s cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
-@keyframes fadeIn {
+@media screen and (max-width: 991px) {
+  .mainn {
+    width: 88% !important;
+  }
+}
+
+@keyframes fadeUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(24px);
   }
   to {
     opacity: 1;
@@ -36,20 +147,26 @@ body {
   }
 }
 
+/* ─── Header ─────────────────────────────────────────────────────────────── */
+.djhdud {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .nameofdev {
   font-size: 24px;
   font-weight: 500;
-  font-family: "IBM Plex Mono", serif;
-  color: #e9e1e1;
-  animation: slideInLeft 0.6s ease-out;
-  letter-spacing: -0.5px;
-  text-shadow: 0 0 30px rgba(244, 165, 229, 0.1);
+  font-family: "IBM Plex Mono", monospace;
+  color: var(--text-primary);
+  letter-spacing: -0.4px;
+  animation: slideLeft 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
-@keyframes slideInLeft {
+@keyframes slideLeft {
   from {
     opacity: 0;
-    transform: translateX(-20px);
+    transform: translateX(-18px);
   }
   to {
     opacity: 1;
@@ -58,15 +175,96 @@ body {
 }
 
 .conff {
-  margin-top: 20px !important;
-  animation: slideInLeft 0.6s ease-out 0.1s both;
+  margin-top: 18px;
+  animation: slideLeft 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.1s both;
 }
 
+/* ─── Avatar ─────────────────────────────────────────────────────────────── */
+.forimage {
+  height: 96px;
+  width: 96px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  position: relative;
+  animation: scaleIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.15s both;
+  transition: transform var(--transition);
+  box-shadow: 0 0 0 2px var(--border);
+}
+
+.forimage::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 180deg,
+    var(--accent),
+    var(--text-muted),
+    var(--accent)
+  );
+  opacity: 0;
+  transition: opacity var(--transition);
+  z-index: -1;
+  filter: blur(3px);
+}
+
+.forimage:hover {
+  transform: scale(1.07);
+}
+.forimage:hover::before {
+  opacity: 0.65;
+  animation: rotate 4s linear infinite;
+}
+
+.forimage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.82);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ─── Bio ────────────────────────────────────────────────────────────────── */
+.infoss {
+  margin-top: 38px;
+  font-size: 14px;
+  font-family: "IBM Plex Mono", monospace;
+  color: var(--text-muted);
+  line-height: 1.85;
+  animation: fadeUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
+  padding: 22px 24px;
+  background: var(--bio-bg);
+  border-left: 2px solid var(--bio-border);
+  border-radius: 0 4px 4px 0;
+  transition:
+    background var(--transition),
+    border-color var(--transition);
+}
+
+/* ─── Links ──────────────────────────────────────────────────────────────── */
 .email {
-  color: #b6aeaa;
-  font-size: 16px;
-  font-family: "IBM Plex Mono", serif;
-  transition: all 0.3s ease;
+  color: var(--text-muted);
+  font-size: 15px;
+  font-family: "IBM Plex Mono", monospace;
+  transition:
+    color var(--transition),
+    transform var(--transition);
   position: relative;
   display: inline-block;
 }
@@ -78,56 +276,34 @@ body {
   height: 1px;
   bottom: -2px;
   left: 0;
-  background: linear-gradient(90deg, #f4a5e5, #b6aeaa);
+  background: linear-gradient(90deg, var(--accent), var(--text-muted));
   transition: width 0.3s ease;
 }
 
 .email:hover {
-  color: #f4a5e5 !important;
-  transform: translateX(3px);
+  color: var(--accent) !important;
+  transform: translateX(2px);
 }
 
 .email:hover::after {
   width: 100%;
 }
 
-.eifj {
-  color: inherit;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  display: block;
-}
-
-.eifj:hover {
-  color: #f4a5e5 !important;
-  transform: translateX(5px);
-}
-
-.infoss {
-  margin-top: 40px;
-  font-size: 14px;
-  font-family: "IBM Plex Mono", serif;
-  color: #e9e1e1;
-  line-height: 1.8;
-  animation: fadeIn 0.8s ease-out 0.3s both;
-  padding: 20px;
-  background: rgba(182, 174, 170, 0.02);
-  border-left: 2px solid rgba(244, 165, 229, 0.2);
-  border-radius: 2px;
-}
-
+/* ─── Section headers ────────────────────────────────────────────────────── */
 .projj {
-  margin-top: 50px;
+  margin-top: 52px;
 }
 
 .lettl {
-  color: #e9e1e1;
-  font-size: 20px;
-  font-family: "IBM Plex Mono", serif;
+  color: var(--text-primary);
+  font-size: 19px;
+  font-family: "IBM Plex Mono", monospace;
   font-weight: 500;
   position: relative;
-  padding-bottom: 15px;
-  margin-bottom: 10px;
+  padding-bottom: 14px;
+  margin-bottom: 8px;
+  letter-spacing: -0.3px;
+  transition: color var(--transition);
 }
 
 .lettl::after {
@@ -135,9 +311,14 @@ body {
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 50px;
+  width: 44px;
   height: 2px;
-  background: linear-gradient(90deg, #f4a5e5, #b6aeaa, transparent);
+  background: linear-gradient(
+    90deg,
+    var(--accent),
+    var(--text-muted),
+    transparent
+  );
   animation: expandWidth 0.6s ease-out;
 }
 
@@ -146,84 +327,59 @@ body {
     width: 0;
   }
   to {
-    width: 50px;
+    width: 44px;
   }
 }
 
-.secondp {
+/* ─── Tech stack ─────────────────────────────────────────────────────────── */
+.tech-grid {
   display: flex;
-  margin-top: 30px;
+  flex-wrap: wrap;
   gap: 10px;
-  animation: slideUp 0.5s ease-out both;
-  align-items: baseline;
+  margin-top: 20px;
 }
 
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(15px);
-  }
-  to {
+.tech-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tech-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
     opacity: 1;
-    transform: translateY(0);
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.75);
   }
 }
 
-.firstc {
-  font-size: 16px;
-  font-family: "IBM Plex Mono", serif;
-  color: #e9e1e1;
-  transition: color 0.3s ease;
-  font-weight: 500;
-}
-
-.secondp:hover .firstc {
-  color: #f4a5e5;
-}
-
-.secondc {
-  font-size: 10px;
-  font-family: "IBM Plex Mono", serif;
-  color: #b6aeaa;
-  opacity: 0.6;
-  transition: opacity 0.3s ease;
-  padding: 2px 6px;
-  background: rgba(182, 174, 170, 0.1);
-  border-radius: 3px;
-}
-
-.secondp:hover .secondc {
-  opacity: 1;
-  background: rgba(244, 165, 229, 0.1);
-}
-
-.expp {
-  font-size: 14px;
-  font-family: "IBM Plex Mono", serif;
-  color: #b6aeaa;
-  margin-top: 10px;
-  line-height: 1.6;
-  padding-left: 2px;
-}
-
+/* ─── Pill / badge ───────────────────────────────────────────────────────── */
 .borr {
-  padding: 6px 12px;
-  background: linear-gradient(
-    135deg,
-    rgba(182, 174, 170, 0.08),
-    rgba(182, 174, 170, 0.12)
-  );
+  padding: 6px 13px;
+  background: var(--surface);
   width: fit-content;
-  color: #b6aeaa;
+  color: var(--text-muted);
   font-size: 13px;
-  font-family: "IBM Plex Mono", serif;
+  font-family: "IBM Plex Mono", monospace;
   cursor: pointer;
-  transition: all 0.3s ease;
-  border: 1px solid rgba(182, 174, 170, 0.15);
+  transition: all var(--transition);
+  border: 1px solid var(--border);
   border-radius: 4px;
   position: relative;
   overflow: hidden;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(8px);
 }
 
 .borr::before {
@@ -236,7 +392,7 @@ body {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(244, 165, 229, 0.15),
+    rgba(244, 165, 229, 0.12),
     transparent
   );
   transition: left 0.5s ease;
@@ -247,82 +403,138 @@ body {
 }
 
 .borr:hover {
-  background: linear-gradient(
-    135deg,
-    rgba(244, 165, 229, 0.12),
-    rgba(182, 174, 170, 0.15)
-  );
-  border-color: rgba(244, 165, 229, 0.3);
+  background: var(--surface-hover);
+  border-color: var(--border-hover);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(244, 165, 229, 0.1);
-  color: #f4a5e5;
+  box-shadow: 0 4px 14px rgba(244, 165, 229, 0.1);
+  color: var(--accent);
 }
 
-.borr svg {
-  transition: transform 0.3s ease;
+/* ─── Project items ──────────────────────────────────────────────────────── */
+.project-item {
+  padding: 22px 0;
+  border-bottom: 1px solid var(--border);
+  transition: border-color var(--transition);
 }
 
-.borr:hover svg {
-  transform: scale(1.15);
+.project-item:last-child {
+  border-bottom: none;
+}
+
+.secondp {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.firstc {
+  font-size: 15px;
+  font-family: "IBM Plex Mono", monospace;
+  color: var(--text-primary);
+  font-weight: 500;
+  transition: color var(--transition);
+}
+
+.secondp:hover .firstc {
+  color: var(--accent);
+}
+
+.secondc {
+  font-size: 10px;
+  font-family: "IBM Plex Mono", monospace;
+  color: var(--text-muted);
+  opacity: 0.6;
+  padding: 2px 7px;
+  background: var(--surface);
+  border-radius: 3px;
+  transition: all var(--transition);
+  border: 1px solid var(--border);
+}
+
+.secondp:hover .secondc {
+  opacity: 1;
+  background: var(--accent-dim);
+  border-color: var(--border-hover);
+}
+
+.expp {
+  font-size: 13.5px;
+  font-family: "IBM Plex Mono", monospace;
+  color: var(--text-faint);
+  margin-top: 9px;
+  line-height: 1.65;
+  transition: color var(--transition);
 }
 
 .mt-3 {
-  margin-top: 20px;
+  margin-top: 18px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
+.mx-1 {
+  margin: 0 3px;
+}
+
+/* ─── Social / More section ──────────────────────────────────────────────── */
 .kfie {
-  margin-top: 50px;
-  padding-top: 30px;
-  border-top: 1px solid rgba(182, 174, 170, 0.1);
+  margin-top: 52px;
+  padding-top: 28px;
+  border-top: 1px solid var(--border);
+}
+
+.social-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.eifj {
+  color: inherit;
+  text-decoration: none;
+  transition: all var(--transition);
+  display: block;
 }
 
 .bugsss {
-  color: #b6aeaa;
-  font-size: 16px;
-  font-family: "IBM Plex Mono", serif;
+  color: var(--text-muted);
+  font-size: 15px;
+  font-family: "IBM Plex Mono", monospace;
   display: flex;
-  gap: 10px;
+  gap: 12px;
   align-items: center;
-  transition: all 0.3s ease;
-  padding: 8px 12px;
-  background: rgba(182, 174, 170, 0.04);
+  transition: all var(--transition);
+  padding: 10px 14px;
+  background: transparent;
   border-radius: 6px;
   border: 1px solid transparent;
 }
 
 .eifj:hover .bugsss {
-  background: rgba(244, 165, 229, 0.08);
-  border-color: rgba(244, 165, 229, 0.2);
-}
-
-.bugsss svg {
-  transition: all 0.3s ease;
+  background: var(--surface-hover);
+  border-color: var(--border-hover);
+  color: var(--accent);
+  transform: translateX(4px);
 }
 
 .eifj:hover .bugsss svg {
-  transform: scale(1.2) rotate(-5deg);
-  filter: drop-shadow(0 0 8px rgba(244, 165, 229, 0.4));
+  transform: scale(1.15) rotate(-4deg);
+  filter: drop-shadow(0 0 6px rgba(244, 165, 229, 0.35));
 }
 
+/* ─── Footer ─────────────────────────────────────────────────────────────── */
 .ouuu {
-  margin-top: 50px;
-  margin-bottom: 30px;
-  animation: fadeIn 1s ease-out;
+  margin-top: 52px;
+  margin-bottom: 16px;
 }
 
 .lineee {
   width: 100%;
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(182, 174, 170, 0.3),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
   animation: expandLine 1s ease-out;
 }
 
@@ -336,109 +548,28 @@ body {
 }
 
 .rights {
-  color: #b6aeaa;
-  font-size: 14px;
-  font-family: "IBM Plex Mono", serif;
-  opacity: 0.7;
+  color: var(--text-faint);
+  font-size: 13px;
+  font-family: "IBM Plex Mono", monospace;
+  transition: color var(--transition);
 }
 
-.djhdud {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* ─── Stagger project animations ─────────────────────────────────────────── */
+.project-item:nth-child(1) {
+  animation: fadeUp 0.5s ease-out 0.05s both;
 }
-
-.forimage {
-  height: 100px;
-  width: 100px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #e9e1e1, #b6aeaa);
-  flex-wrap: wrap;
-  gap: 30px;
-  position: relative;
-  animation: scaleIn 0.6s ease-out 0.2s both;
-  transition: transform 0.3s ease;
-  box-shadow: 0 0 0 3px rgba(244, 165, 229, 0.1);
+.project-item:nth-child(2) {
+  animation: fadeUp 0.5s ease-out 0.12s both;
 }
-
-@keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+.project-item:nth-child(3) {
+  animation: fadeUp 0.5s ease-out 0.19s both;
 }
-
-.forimage::before {
-  content: "";
-  position: absolute;
-  inset: -4px;
-  border-radius: 50%;
-  background: conic-gradient(from 180deg, #f4a5e5, #b6aeaa, #f4a5e5);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: -1;
-  filter: blur(4px);
+.project-item:nth-child(4) {
+  animation: fadeUp 0.5s ease-out 0.26s both;
 }
-
-.forimage:hover::before {
-  opacity: 0.7;
-  animation: rotate 4s linear infinite;
+.project-item:nth-child(5) {
+  animation: fadeUp 0.5s ease-out 0.33s both;
 }
-
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.forimage:hover {
-  transform: scale(1.08);
-  box-shadow: 0 0 0 3px rgba(244, 165, 229, 0.3);
-}
-
-.forimage img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
-  transition: filter 0.3s ease;
-}
-
-.forimage:hover img {
-  filter: brightness(1.1) saturate(1.1);
-}
-
-/* Stagger animation for project items */
-.projj > div > div:nth-child(1) {
-  animation-delay: 0.1s;
-}
-.projj > div > div:nth-child(2) {
-  animation-delay: 0.2s;
-}
-.projj > div > div:nth-child(3) {
-  animation-delay: 0.3s;
-}
-.projj > div > div:nth-child(4) {
-  animation-delay: 0.4s;
-}
-.projj > div > div:nth-child(5) {
-  animation-delay: 0.5s;
-}
-.projj > div > div:nth-child(6) {
-  animation-delay: 0.6s;
-}
-
-/* Add subtle glow to interactive elements */
-.borr:hover,
-.eifj:hover .bugsss {
-  box-shadow:
-    0 0 20px rgba(244, 165, 229, 0.1),
-    0 4px 12px rgba(0, 0, 0, 0.2);
+.project-item:nth-child(6) {
+  animation: fadeUp 0.5s ease-out 0.4s both;
 }

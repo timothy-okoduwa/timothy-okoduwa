@@ -2,6 +2,24 @@
 
 const project = [
   {
+    name: "ShipMeter",
+    description:
+      "A developer productivity SaaS that tracks GitHub commits, visualizes coding activity with 365-day heatmaps, and gamifies consistency with streaks and achievements. Features real-time analytics, commit quality scoring, language breakdowns, productivity time analysis, and AI-powered shareable stat cards.",
+    link: "https://shipmeter.vercel.app/",
+    type: "Developer productivity / Analytics SaaS",
+    github: "https://github.com/timothy-okoduwa/shipmeter",
+    npm: "",
+  },
+  {
+    name: "Markly",
+    description:
+      "A production-ready habit tracking application with GitHub-style heatmap visualizations. Track multiple habits with customizable colors and shapes, view detailed statistics including streaks and monthly summaries, and sync everything in real-time with Firebase. Built mobile-first with dark/light mode support.",
+    link: "https://marklyy.vercel.app/",
+    type: "Habit tracking / Personal productivity app",
+    github: "https://github.com/timothy-okoduwa/markly",
+    npm: "",
+  },
+  {
     name: "JSON2Table",
     description:
       "A developer-friendly data explorer that converts JSON, YAML, XML, CSV, and JavaScript objects into clean tables and visual relationship graphs. It helps developers inspect, edit, and understand complex API and AI-generated data faster.",
@@ -32,7 +50,7 @@ const project = [
   {
     name: "Snippad",
     description:
-      "Snippad is a collaborative code snippet vault for developers. The idea is simple: you can save and organize your code snippets, choose to make them public or private, and even share them with specific users via email — like a private GitHub Gist with access control. But we’re going further. Snippad allows live editing (like Figma, but for code), inline comments, and real-time previews for HTML, CSS, JavaScript, and even React components. It’s built for solo devs and teams who want a faster way to experiment, share, and reuse code.",
+      "Snippad is a collaborative code snippet vault for developers. The idea is simple: you can save and organize your code snippets, choose to make them public or private, and even share them with specific users via email — like a private GitHub Gist with access control. But we're going further. Snippad allows live editing (like Figma, but for code), inline comments, and real-time previews for HTML, CSS, JavaScript, and even React components. It's built for solo devs and teams who want a faster way to experiment, share, and reuse code.",
     link: "https://snippad.cloud/",
     type: "Done + Private",
     github: "",
@@ -123,7 +141,7 @@ const project = [
   {
     name: "inteck-design-system-mobile",
     description:
-      "LAD mobile component library — a design‑system package providing reusable UI components optimized for mobile applications, last published April 8, 2021. Minimal dependencies, ISC‑licensed.",
+      "LAD mobile component library — a design‑system package providing reusable UI components optimized for mobile applications, last published April 8, 2021. Minimal dependencies, ISC‑licensed.",
     link: "https://inteck-design-system-web.onrender.com/",
     type: "Done + Open",
     github: "",
@@ -188,4 +206,5 @@ const project = [
     npm: "",
   },
 ];
+
 export default project;
