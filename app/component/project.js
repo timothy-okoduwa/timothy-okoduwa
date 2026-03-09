@@ -1,6 +1,15 @@
 /** @format */
 
 const project = [
+    {
+    name: "MailSift",
+    description:
+      "A webmail discovery tool that scans thousands of email domains to find working webmail login pages. Features a SIFT token economy with Naira payments, bulk email import via .txt/.csv/.pdf, structured CSV and PDF report exports, and a per-use pricing model with no subscriptions.",
+    link: "https://mailsiftt.vercel.app/",
+    type: "Developer utility / Email scanning SaaS",
+    github: "",
+    npm: "",
+  },
   {
     name: "ShipMeter",
     description:
