@@ -4,7 +4,7 @@ const project = [
     {
     name: "MailSift",
     description:
-      "A webmail discovery tool that scans thousands of email domains to find working webmail login pages. Features a SIFT token economy with Naira payments, bulk email import via .txt/.csv/.pdf, structured CSV and PDF report exports, and a per-use pricing model with no subscriptions.",
+      "A webmail discovery tool that scans thousands of email domains to find working webmail login pages. Features a SIFT token economy with Crypto payments, bulk email import via .txt/.csv/.pdf, structured CSV and PDF report exports, and a per-use pricing model with no subscriptions.",
     link: "https://mailsiftt.vercel.app/",
     type: "Developer utility / Email scanning SaaS",
     github: "",
@@ -65,15 +65,7 @@ const project = [
     github: "",
     npm: "",
   },
-  {
-    name: "EstateOne",
-    description:
-      "Estate management system for property administrators to streamline visitor check-ins, maintenance, emergency alerts, and access control — designed to simplify property admin workflows. (Productivity category on Google Play)",
-    link: "https://play.google.com/store/apps/details?id=com.estatemanage.app&hl=en",
-    type: "Mobile App (Productivity / Estate Management)",
-    github: "",
-    npm: "",
-  },
+
   {
     name: "WorkOnPro Android",
     description:
@@ -92,12 +84,39 @@ const project = [
     github: "",
     npm: "",
   },
+      {
+    name: "EstateOne Android",
+    description:
+      "Estate management system for property administrators to streamline visitor check-ins, maintenance, emergency alerts, and access control — designed to simplify property admin workflows. (Productivity category on Google Play)",
+    link: "https://play.google.com/store/apps/details?id=com.estatemanage.app&hl=en",
+    type: "Mobile App (Productivity / Estate Management)",
+    github: "",
+    npm: "",
+  },
+      {
+    name: "EstateOne IOS",
+    description:
+      "Estate management system for property administrators to streamline visitor check-ins, maintenance, emergency alerts, and access control — designed to simplify property admin workflows. (Productivity category on Google Play)",
+    link: "https://apps.apple.com/gb/app/estateone/id6758697503",
+    type: "Mobile App (Productivity / Estate Management)",
+    github: "",
+    npm: "",
+  },
+     {
+    name: "Original Aso Ebi IOS",
+    description:
+      "Original Aso-Ebi is a top fabric store in Lagos Island, Nigeria, offering a wide range of high-quality traditional and modern fabrics for weddings and cultural events. They blend heritage with fashion and focus on customer satisfaction with personalized service.",
+    link: "https://apps.apple.com/gb/app/original-aso-ebi-ideraoluwa/id6761770150",
+    type: "Mobile App (Shopping / Fashion)",
+    github: "",
+    npm: "",
+  },
   {
     name: "Original Aso Ebi",
     description:
       "Original Aso-Ebi is a top fabric store in Lagos Island, Nigeria, offering a wide range of high-quality traditional and modern fabrics for weddings and cultural events. They blend heritage with fashion and focus on customer satisfaction with personalized service",
     link: "https://originalasoebi.com/",
-    type: "Done + Private",
+    type: "Web App (Shopping / Fashion)",
     github: "",
     npm: "",
   },
