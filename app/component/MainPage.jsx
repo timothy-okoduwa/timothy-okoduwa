@@ -1,12 +1,87 @@
 /** @format */
 "use client";
 
-import React, { useState, useEffect } from "react";
+// ─── CHANGES FROM ORIGINAL ────────────────────────────────────────────────────
+// 1. Removed isDark / toggleTheme / theme-dark / theme-light entirely
+// 2. Root wrapper now gets className="weather-root weather-{condition}"
+//    so CSS tokens respond to the live weather automatically
+// 3. Removed the theme-toggle button (SunIcon / MoonIcon still kept in
+//    case you want them later, but the button is gone)
+// 4. WeatherAmbient canvases are z-index 0 (sky) and 1 (particles).
+//    All page content sits at z-index 2 via .weather-root / .mainn
+// 5. body override `--bg: #f5f0ee !important` removed from globals.css
+// ─────────────────────────────────────────────────────────────────────────────
+
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
 import project from "./project";
 import Image from "next/image";
 import p from "./mypic.png";
+import WeatherAmbient, { wmoToCondition } from "./WeatherAmbient";
 
+import { initializeApp, getApps } from "firebase/app";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  query,
+  orderBy,
+  limit,
+  onSnapshot,
+  serverTimestamp,
+} from "firebase/firestore";
+
+// ─── WMO label + emoji maps ───────────────────────────────────────────────────
+const WMO_EMOJI = {
+  0: "☀️",
+  1: "🌤",
+  2: "⛅",
+  3: "☁️",
+  45: "🌫",
+  48: "🌫",
+  51: "🌦",
+  53: "🌦",
+  55: "🌧",
+  61: "🌧",
+  63: "🌧",
+  65: "🌧",
+  71: "🌨",
+  73: "❄️",
+  75: "❄️",
+  77: "🌨",
+  80: "🌦",
+  81: "🌧",
+  82: "⛈",
+  95: "⛈",
+  96: "⛈",
+  99: "⛈",
+};
+const WMO_LABEL = {
+  0: "Clear sky",
+  1: "Mostly clear",
+  2: "Partly cloudy",
+  3: "Overcast",
+  45: "Foggy",
+  48: "Icy fog",
+  51: "Light drizzle",
+  53: "Drizzle",
+  55: "Heavy drizzle",
+  61: "Light rain",
+  63: "Rain",
+  65: "Heavy rain",
+  71: "Light snow",
+  73: "Snow",
+  75: "Heavy snow",
+  77: "Snow grains",
+  80: "Showers",
+  81: "Heavy showers",
+  82: "Violent showers",
+  95: "Thunderstorm",
+  96: "Hail storm",
+  99: "Heavy hail storm",
+};
+
+// ─── Tech stack ───────────────────────────────────────────────────────────────
 const techStack = [
   { name: "TypeScript", color: "#3178c6" },
   { name: "JavaScript", color: "#f7df1e" },
@@ -18,7 +93,7 @@ const techStack = [
 
 const getCurrentYearRoman = () => {
   const year = new Date().getFullYear();
-  const romanNumerals = [
+  const rn = [
     [1000, "M"],
     [900, "CM"],
     [500, "D"],
@@ -33,59 +108,1405 @@ const getCurrentYearRoman = () => {
     [4, "IV"],
     [1, "I"],
   ];
-  let result = "";
-  let remaining = year;
-  for (const [value, numeral] of romanNumerals) {
-    while (remaining >= value) {
-      result += numeral;
-      remaining -= value;
+  let r = "",
+    rem = year;
+  for (const [v, n] of rn) {
+    while (rem >= v) {
+      r += n;
+      rem -= v;
     }
   }
-  return result;
+  return r;
 };
 
-const SunIcon = () => (
-  <svg
-    width="15"
-    height="15"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <circle cx="12" cy="12" r="5" />
-    <line x1="12" y1="1" x2="12" y2="3" />
-    <line x1="12" y1="21" x2="12" y2="23" />
-    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-    <line x1="1" y1="12" x2="3" y2="12" />
-    <line x1="21" y1="12" x2="23" y2="12" />
-    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-  </svg>
-);
+// ─── VibeBar ──────────────────────────────────────────────────────────────────
+const p2 = (n) => String(n).padStart(2, "0");
 
-const MoonIcon = () => (
-  <svg
-    width="14"
-    height="14"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-  </svg>
-);
+const VibeBar = ({ available = true, weatherData }) => {
+  const [time, setTime] = useState("");
+  useEffect(() => {
+    const tick = () => {
+      const n = new Date();
+      setTime(
+        `${p2(n.getHours())}:${p2(n.getMinutes())}:${p2(n.getSeconds())}`,
+      );
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
 
-// ─── Audio Wave ────────────────────────────────────────────────────────────
+  const pill = {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 6,
+    padding: "4px 10px",
+    borderRadius: 99,
+    border: "1px solid var(--border)",
+    background: "var(--surface)",
+    fontSize: 12,
+    fontFamily: "'IBM Plex Mono',monospace",
+    color: "var(--text-muted)",
+    backdropFilter: "blur(8px)",
+  };
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexWrap: "wrap",
+        gap: 8,
+        marginTop: 14,
+        alignItems: "center",
+      }}
+    >
+      <div
+        style={{
+          ...pill,
+          borderColor: available
+            ? "rgba(74,222,128,0.35)"
+            : "rgba(182,174,170,0.2)",
+          background: available ? "rgba(74,222,128,0.1)" : "var(--surface)",
+          color: available ? "rgba(74,222,128,0.95)" : "var(--text-faint)",
+        }}
+      >
+        <span
+          style={{
+            width: 7,
+            height: 7,
+            borderRadius: "50%",
+            background: available ? "#4ade80" : "var(--text-faint)",
+            flexShrink: 0,
+            boxShadow: available ? "0 0 6px rgba(74,222,128,0.6)" : "none",
+            animation: available ? "pulse 2s ease-in-out infinite" : "none",
+          }}
+        />
+        {available ? "Available for work" : "Not available"}
+      </div>
+      <div style={pill}>
+        <svg
+          width="11"
+          height="11"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <polyline points="12 6 12 12 16 14" />
+        </svg>
+        {time}
+        {weatherData?.tz ? ` ${weatherData.tz}` : ""}
+      </div>
+      {weatherData && (
+        <div style={pill}>
+          <span style={{ fontSize: 13 }}>
+            {WMO_EMOJI[weatherData.code] ?? "🌡"}
+          </span>
+          {weatherData.temp}°C · {WMO_LABEL[weatherData.code] ?? "Weather"}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ─── Command Palette ──────────────────────────────────────────────────────────
+const STATIC_CMDS = [
+  {
+    id: "email",
+    label: "Send email",
+    desc: "timothyokoduwa4@gmail.com",
+    icon: "✉",
+    action: () => window.open("mailto:timothyokoduwa4@gmail.com"),
+  },
+  {
+    id: "github",
+    label: "Open GitHub",
+    desc: "github.com/timothy-okoduwa",
+    icon: "⌥",
+    action: () => window.open("https://github.com/timothy-okoduwa", "_blank"),
+  },
+  {
+    id: "twitter",
+    label: "Open Twitter / X",
+    desc: "@TimothyOkoduwa",
+    icon: "𝕏",
+    action: () => window.open("https://x.com/TimothyOkoduwa", "_blank"),
+  },
+  {
+    id: "linkedin",
+    label: "Open LinkedIn",
+    desc: "timothy-okoduwa",
+    icon: "in",
+    action: () =>
+      window.open(
+        "https://www.linkedin.com/in/timothy-okoduwa-b4771b293/",
+        "_blank",
+      ),
+  },
+  {
+    id: "projects",
+    label: "Jump to Projects",
+    desc: "Scroll to the projects section",
+    icon: "↓",
+    action: () =>
+      document
+        .getElementById("section-projects")
+        ?.scrollIntoView({ behavior: "smooth" }),
+  },
+  {
+    id: "guestbook",
+    label: "Open Guestbook",
+    desc: "Leave your signature",
+    icon: "✍",
+    action: () => window.__openGuestbook?.(),
+  },
+  {
+    id: "top",
+    label: "Scroll to top",
+    desc: "",
+    icon: "↑",
+    action: () => window.scrollTo({ top: 0, behavior: "smooth" }),
+  },
+];
+
+const hl = (text, q) => {
+  if (!q) return text;
+  const i = text.toLowerCase().indexOf(q.toLowerCase());
+  if (i === -1) return text;
+  return (
+    <>
+      {text.slice(0, i)}
+      <mark
+        style={{
+          background: "var(--accent-dim)",
+          color: "var(--accent)",
+          borderRadius: 2,
+        }}
+      >
+        {text.slice(i, i + q.length)}
+      </mark>
+      {text.slice(i + q.length)}
+    </>
+  );
+};
+
+const PalettePortal = ({ projects, onClose }) => {
+  const [query, setQuery] = useState("");
+  const [sel, setSel] = useState(0);
+  const inputRef = useRef(null);
+  const listRef = useRef(null);
+
+  const all = [
+    ...STATIC_CMDS,
+    ...projects.map((p) => ({
+      id: `p-${p.name}`,
+      label: p.name,
+      desc:
+        (p.description || "").slice(0, 60) +
+        ((p.description || "").length > 60 ? "…" : ""),
+      icon: "→",
+      action: () => window.open(p.link, "_blank"),
+    })),
+  ];
+  const filtered = query
+    ? all.filter(
+        (c) =>
+          c.label.toLowerCase().includes(query.toLowerCase()) ||
+          (c.desc || "").toLowerCase().includes(query.toLowerCase()),
+      )
+    : all;
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+  useEffect(() => {
+    setSel(0);
+  }, [query]);
+
+  const run = useCallback(
+    (cmd) => {
+      cmd.action();
+      onClose();
+    },
+    [onClose],
+  );
+  const onKey = (e) => {
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setSel((s) => Math.min(s + 1, filtered.length - 1));
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setSel((s) => Math.max(s - 1, 0));
+    } else if (e.key === "Enter") {
+      if (filtered[sel]) run(filtered[sel]);
+    } else if (e.key === "Escape") {
+      onClose();
+    }
+  };
+  useEffect(() => {
+    listRef.current?.children[sel]?.scrollIntoView({ block: "nearest" });
+  }, [sel]);
+
+  const iS = (i) => ({
+    display: "flex",
+    alignItems: "center",
+    gap: 12,
+    padding: "10px 16px",
+    cursor: "pointer",
+    borderRadius: 6,
+    background: i === sel ? "var(--surface-hover)" : "transparent",
+    borderLeft: `2px solid ${i === sel ? "var(--accent)" : "transparent"}`,
+    transition: "all 0.12s",
+  });
+
+  return createPortal(
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 10000,
+        display: "flex",
+        alignItems: "flex-start",
+        justifyContent: "center",
+        paddingTop: "14vh",
+      }}
+    >
+      <div
+        onClick={onClose}
+        style={{
+          position: "fixed",
+          inset: 0,
+          background: "rgba(10,10,10,0.72)",
+          backdropFilter: "blur(4px)",
+          animation: "npFadeIn 0.15s ease",
+        }}
+      />
+      <div
+        style={{
+          position: "relative",
+          zIndex: 1,
+          width: "100%",
+          maxWidth: 560,
+          margin: "0 16px",
+          borderRadius: 12,
+          border: "1px solid var(--border-hover)",
+          background: "var(--bio-bg)",
+          backdropFilter: "blur(20px)",
+          boxShadow: "0 32px 80px rgba(0,0,0,0.55)",
+          overflow: "hidden",
+          animation: "npSlideUp 0.18s cubic-bezier(0.22,1,0.36,1)",
+        }}
+        onKeyDown={onKey}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            padding: "14px 16px",
+            borderBottom: "1px solid var(--border)",
+          }}
+        >
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="var(--text-faint)"
+            strokeWidth="2"
+            strokeLinecap="round"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input
+            ref={inputRef}
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search projects, links, actions…"
+            style={{
+              flex: 1,
+              background: "none",
+              border: "none",
+              outline: "none",
+              fontFamily: "'IBM Plex Mono',monospace",
+              fontSize: 14,
+              color: "var(--text-primary)",
+              caretColor: "var(--accent)",
+            }}
+          />
+          <kbd
+            style={{
+              padding: "2px 7px",
+              borderRadius: 4,
+              border: "1px solid var(--border)",
+              background: "var(--surface)",
+              fontSize: 11,
+              fontFamily: "'IBM Plex Mono',monospace",
+              color: "var(--text-faint)",
+            }}
+          >
+            esc
+          </kbd>
+        </div>
+        <div
+          ref={listRef}
+          style={{ maxHeight: 360, overflowY: "auto", padding: 8 }}
+        >
+          {filtered.length === 0 ? (
+            <div
+              style={{
+                padding: 24,
+                textAlign: "center",
+                fontFamily: "'IBM Plex Mono',monospace",
+                fontSize: 13,
+                color: "var(--text-faint)",
+              }}
+            >
+              No results for "{query}"
+            </div>
+          ) : (
+            filtered.map((cmd, i) => (
+              <div
+                key={cmd.id}
+                style={iS(i)}
+                onMouseEnter={() => setSel(i)}
+                onClick={() => run(cmd)}
+              >
+                <span
+                  style={{
+                    width: 28,
+                    height: 28,
+                    borderRadius: 6,
+                    border: "1px solid var(--border)",
+                    background: "var(--surface)",
+                    display: "grid",
+                    placeItems: "center",
+                    fontSize: 12,
+                    color: "var(--text-muted)",
+                    flexShrink: 0,
+                    fontFamily: "'IBM Plex Mono',monospace",
+                  }}
+                >
+                  {cmd.icon}
+                </span>
+                <div style={{ minWidth: 0 }}>
+                  <div
+                    style={{
+                      fontSize: 13,
+                      fontFamily: "'IBM Plex Mono',monospace",
+                      color: "var(--text-primary)",
+                      fontWeight: 500,
+                    }}
+                  >
+                    {hl(cmd.label, query)}
+                  </div>
+                  {cmd.desc && (
+                    <div
+                      style={{
+                        fontSize: 11,
+                        fontFamily: "'IBM Plex Mono',monospace",
+                        color: "var(--text-faint)",
+                        marginTop: 2,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {hl(cmd.desc, query)}
+                    </div>
+                  )}
+                </div>
+                {i === sel && (
+                  <kbd
+                    style={{
+                      marginLeft: "auto",
+                      padding: "2px 7px",
+                      borderRadius: 4,
+                      border: "1px solid var(--border-hover)",
+                      background: "var(--accent-dim)",
+                      fontSize: 10,
+                      fontFamily: "'IBM Plex Mono',monospace",
+                      color: "var(--accent)",
+                      flexShrink: 0,
+                    }}
+                  >
+                    ↵
+                  </kbd>
+                )}
+              </div>
+            ))
+          )}
+        </div>
+        <div
+          style={{
+            padding: "8px 16px",
+            borderTop: "1px solid var(--border)",
+            display: "flex",
+            gap: 16,
+            alignItems: "center",
+          }}
+        >
+          {[
+            ["↑↓", "navigate"],
+            ["↵", "open"],
+            ["esc", "close"],
+          ].map(([k, v]) => (
+            <span
+              key={k}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 5,
+                fontSize: 11,
+                fontFamily: "'IBM Plex Mono',monospace",
+                color: "var(--text-faint)",
+              }}
+            >
+              <kbd
+                style={{
+                  padding: "1px 5px",
+                  borderRadius: 3,
+                  border: "1px solid var(--border)",
+                  background: "var(--surface)",
+                  fontSize: 10,
+                }}
+              >
+                {k}
+              </kbd>
+              {v}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>,
+    document.body,
+  );
+};
+
+const CommandPalette = ({ projects }) => {
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    const h = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setOpen((v) => !v);
+      }
+    };
+    window.addEventListener("keydown", h);
+    return () => window.removeEventListener("keydown", h);
+  }, []);
+  return (
+    <>
+      <button
+        onClick={() => setOpen(true)}
+        aria-label="Open command palette"
+        style={{
+          position: "fixed",
+          bottom: 22,
+          right: 24,
+          zIndex: 200,
+          display: "flex",
+          alignItems: "center",
+          gap: 7,
+          padding: "6px 12px",
+          borderRadius: 99,
+          border: "1px solid var(--border)",
+          background: "var(--surface)",
+          color: "var(--text-faint)",
+          fontFamily: "'IBM Plex Mono',monospace",
+          fontSize: 11,
+          cursor: "pointer",
+          backdropFilter: "blur(12px)",
+          transition: "all 0.2s",
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.borderColor = "var(--border-hover)";
+          e.currentTarget.style.color = "var(--accent)";
+          e.currentTarget.style.background = "var(--accent-dim)";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.borderColor = "var(--border)";
+          e.currentTarget.style.color = "var(--text-faint)";
+          e.currentTarget.style.background = "var(--surface)";
+        }}
+      >
+        <svg
+          width="11"
+          height="11"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+        >
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        <span>Search</span>
+        <kbd
+          style={{
+            padding: "1px 5px",
+            borderRadius: 3,
+            border: "1px solid var(--border)",
+            background: "rgba(0,0,0,0.15)",
+            fontSize: 10,
+          }}
+        >
+          ⌘K
+        </kbd>
+      </button>
+      {open && (
+        <PalettePortal projects={projects} onClose={() => setOpen(false)} />
+      )}
+    </>
+  );
+};
+
+// ─── Firebase Guestbook ───────────────────────────────────────────────────────
+const getDB = () => {
+  const cfg = {
+    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  };
+  const app = getApps().length ? getApps()[0] : initializeApp(cfg);
+  return getFirestore(app);
+};
+
+const CW = 340,
+  CH = 120;
+
+const SignaturePad = ({ onSign }) => {
+  const cvs = useRef(null);
+  const drawing = useRef(false);
+  const paths = useRef([]);
+  const cur = useRef([]);
+  const [empty, setEmpty] = useState(true);
+
+  const pos = (e, c) => {
+    const r = c.getBoundingClientRect(),
+      sx = c.width / r.width,
+      sy = c.height / r.height,
+      s = e.touches ? e.touches[0] : e;
+    return { x: (s.clientX - r.left) * sx, y: (s.clientY - r.top) * sy };
+  };
+  const redraw = useCallback(() => {
+    const c = cvs.current;
+    if (!c) return;
+    const ctx = c.getContext("2d");
+    ctx.clearRect(0, 0, CW, CH);
+    ctx.strokeStyle = "var(--accent,#f4a5e5)";
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    [...paths.current, cur.current].forEach((pts) => {
+      if (pts.length < 2) return;
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x, pts[0].y);
+      for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
+      ctx.stroke();
+    });
+  }, []);
+  const onS = (e) => {
+    e.preventDefault();
+    drawing.current = true;
+    cur.current = [pos(e, cvs.current)];
+  };
+  const onM = (e) => {
+    e.preventDefault();
+    if (!drawing.current) return;
+    cur.current.push(pos(e, cvs.current));
+    redraw();
+  };
+  const onE = () => {
+    if (!drawing.current) return;
+    drawing.current = false;
+    if (cur.current.length > 1) {
+      paths.current.push([...cur.current]);
+      setEmpty(false);
+    }
+    cur.current = [];
+    redraw();
+  };
+  const clear = () => {
+    paths.current = [];
+    cur.current = [];
+    setEmpty(true);
+    cvs.current?.getContext("2d")?.clearRect(0, 0, CW, CH);
+  };
+  const toSVG = () =>
+    paths.current
+      .map((pts) =>
+        pts.length < 2
+          ? ""
+          : `M ${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)} ` +
+            pts
+              .slice(1)
+              .map((p) => `L ${p.x.toFixed(1)} ${p.y.toFixed(1)}`)
+              .join(" "),
+      )
+      .join(" ");
+  const submit = () => {
+    if (empty) return;
+    onSign(toSVG());
+    clear();
+  };
+
+  const bBtn = {
+    padding: "5px 14px",
+    borderRadius: 4,
+    border: "1px solid var(--border)",
+    background: "var(--surface)",
+    color: "var(--text-muted)",
+    fontFamily: "'IBM Plex Mono',monospace",
+    fontSize: 12,
+    cursor: "pointer",
+    transition: "all 0.2s",
+  };
+  return (
+    <div>
+      <div
+        style={{
+          position: "relative",
+          borderRadius: 8,
+          border: "1px solid var(--bio-border)",
+          background: "var(--bio-bg)",
+          overflow: "hidden",
+          userSelect: "none",
+          cursor: "crosshair",
+        }}
+      >
+        {empty && (
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              pointerEvents: "none",
+            }}
+          >
+            <span
+              style={{
+                fontFamily: "'IBM Plex Mono',monospace",
+                fontSize: 12,
+                color: "var(--text-faint)",
+              }}
+            >
+              Sign here ✍
+            </span>
+          </div>
+        )}
+        <canvas
+          ref={cvs}
+          width={CW}
+          height={CH}
+          style={{ display: "block", width: "100%", touchAction: "none" }}
+          onMouseDown={onS}
+          onMouseMove={onM}
+          onMouseUp={onE}
+          onMouseLeave={onE}
+          onTouchStart={onS}
+          onTouchMove={onM}
+          onTouchEnd={onE}
+        />
+      </div>
+      <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+        <button style={bBtn} onClick={clear}>
+          Clear
+        </button>
+        <button
+          style={{
+            ...bBtn,
+            background: empty ? "var(--surface)" : "var(--accent-dim)",
+            borderColor: empty ? "var(--border)" : "var(--border-hover)",
+            color: empty ? "var(--text-faint)" : "var(--accent)",
+            cursor: empty ? "not-allowed" : "pointer",
+          }}
+          onClick={submit}
+          disabled={empty}
+        >
+          Submit signature →
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const SigView = ({ svgPath, createdAt }) => {
+  const date = createdAt?.toDate
+    ? createdAt.toDate().toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
+    : new Date(createdAt).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+  return (
+    <div
+      style={{
+        borderRadius: 8,
+        border: "1px solid var(--border)",
+        background: "var(--surface)",
+        padding: "10px 14px",
+        transition: "border-color 0.2s",
+      }}
+      onMouseEnter={(e) =>
+        (e.currentTarget.style.borderColor = "var(--border-hover)")
+      }
+      onMouseLeave={(e) =>
+        (e.currentTarget.style.borderColor = "var(--border)")
+      }
+    >
+      <svg
+        viewBox={`0 0 ${CW} ${CH}`}
+        width="100%"
+        height={CH * 0.65}
+        style={{ display: "block" }}
+      >
+        <path
+          d={svgPath}
+          stroke="var(--accent,#f4a5e5)"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          fill="none"
+        />
+      </svg>
+      <div
+        style={{
+          fontSize: 10,
+          fontFamily: "'IBM Plex Mono',monospace",
+          color: "var(--text-faint)",
+          marginTop: 6,
+          textAlign: "right",
+        }}
+      >
+        {date}
+      </div>
+    </div>
+  );
+};
+
+const GuestbookModal = ({ onClose }) => {
+  const [sigs, setSigs] = useState([]);
+  const [status, setStatus] = useState(null);
+  const dbRef = useRef(null);
+
+  useEffect(() => {
+    try {
+      dbRef.current = getDB();
+    } catch (e) {
+      console.warn("Firebase not configured:", e);
+      return;
+    }
+    const q = query(
+      collection(dbRef.current, "signatures"),
+      orderBy("createdAt", "desc"),
+      limit(40),
+    );
+    const unsub = onSnapshot(q, (snap) =>
+      setSigs(snap.docs.map((d) => ({ id: d.id, ...d.data() }))),
+    );
+    return () => unsub();
+  }, []);
+
+  const handleSign = async (svgPath) => {
+    if (!dbRef.current) {
+      setStatus("error");
+      return;
+    }
+    setStatus("submitting");
+    try {
+      await addDoc(collection(dbRef.current, "signatures"), {
+        svg_path: svgPath,
+        createdAt: serverTimestamp(),
+      });
+      setStatus("success");
+    } catch {
+      setStatus("error");
+    }
+    setTimeout(() => setStatus(null), 3000);
+  };
+
+  useEffect(() => {
+    const h = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", h);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", h);
+      document.body.style.overflow = "";
+    };
+  }, [onClose]);
+
+  return createPortal(
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 9500,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 20,
+      }}
+    >
+      <div
+        onClick={onClose}
+        style={{
+          position: "fixed",
+          inset: 0,
+          background: "rgba(10,10,10,0.82)",
+          backdropFilter: "blur(6px)",
+          animation: "npFadeIn 0.2s ease",
+        }}
+      />
+      <div
+        style={{
+          position: "relative",
+          zIndex: 1,
+          width: "100%",
+          maxWidth: 520,
+          maxHeight: "88vh",
+          borderRadius: 12,
+          border: "1px solid var(--border-hover)",
+          background: "var(--bio-bg)",
+          backdropFilter: "blur(20px)",
+          boxShadow: "0 32px 100px rgba(0,0,0,0.65)",
+          display: "flex",
+          flexDirection: "column",
+          animation: "npSlideUp 0.22s cubic-bezier(0.22,1,0.36,1)",
+          overflow: "hidden",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+            justifyContent: "space-between",
+            padding: "20px 22px 16px",
+            borderBottom: "1px solid var(--border)",
+            flexShrink: 0,
+          }}
+        >
+          <div>
+            <div
+              style={{
+                fontSize: 19,
+                fontWeight: 500,
+                fontFamily: "'IBM Plex Mono',monospace",
+                color: "var(--text-primary)",
+                letterSpacing: "-0.3px",
+                position: "relative",
+                paddingBottom: 14,
+                marginBottom: 0,
+              }}
+            >
+              Guestbook
+              <span
+                style={{
+                  position: "absolute",
+                  bottom: 0,
+                  left: 0,
+                  width: 44,
+                  height: 2,
+                  background:
+                    "linear-gradient(90deg,var(--accent),var(--text-muted),transparent)",
+                }}
+              />
+            </div>
+            <p
+              style={{
+                fontSize: 12,
+                fontFamily: "'IBM Plex Mono',monospace",
+                color: "var(--text-faint)",
+                margin: "6px 0 0",
+                lineHeight: 1.6,
+              }}
+            >
+              Leave your mark. No words needed — just your signature.
+            </p>
+          </div>
+          <button
+            onClick={onClose}
+            style={{
+              width: 30,
+              height: 30,
+              borderRadius: "50%",
+              border: "1px solid var(--border)",
+              background: "var(--surface)",
+              color: "var(--text-muted)",
+              cursor: "pointer",
+              display: "grid",
+              placeItems: "center",
+              fontSize: 13,
+              flexShrink: 0,
+              transition: "all 0.2s",
+              marginLeft: 12,
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = "var(--border-hover)";
+              e.currentTarget.style.color = "var(--accent)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = "var(--border)";
+              e.currentTarget.style.color = "var(--text-muted)";
+            }}
+          >
+            ✕
+          </button>
+        </div>
+        <div
+          style={{
+            padding: "16px 22px",
+            borderBottom: "1px solid var(--border)",
+            flexShrink: 0,
+          }}
+        >
+          <SignaturePad onSign={handleSign} />
+          {status === "submitting" && (
+            <div
+              style={{
+                marginTop: 10,
+                fontSize: 12,
+                fontFamily: "'IBM Plex Mono',monospace",
+                color: "var(--text-faint)",
+              }}
+            >
+              Saving…
+            </div>
+          )}
+          {status === "success" && (
+            <div
+              style={{
+                marginTop: 10,
+                fontSize: 12,
+                fontFamily: "'IBM Plex Mono',monospace",
+                color: "rgba(74,222,128,0.9)",
+              }}
+            >
+              ✓ Signed! Your mark lives here forever.
+            </div>
+          )}
+          {status === "error" && (
+            <div
+              style={{
+                marginTop: 10,
+                fontSize: 12,
+                fontFamily: "'IBM Plex Mono',monospace",
+                color: "rgba(248,113,113,0.9)",
+              }}
+            >
+              Add Firebase config to .env.local to persist signatures.
+            </div>
+          )}
+        </div>
+        <div style={{ overflowY: "auto", padding: "16px 22px 22px", flex: 1 }}>
+          {sigs.length === 0 ? (
+            <p
+              style={{
+                fontSize: 13,
+                fontFamily: "'IBM Plex Mono',monospace",
+                color: "var(--text-faint)",
+                textAlign: "center",
+                paddingTop: 16,
+              }}
+            >
+              No signatures yet — be the first.
+            </p>
+          ) : (
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: 10,
+              }}
+            >
+              {sigs.map((s) => (
+                <SigView
+                  key={s.id}
+                  svgPath={s.svg_path}
+                  createdAt={s.createdAt}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>,
+    document.body,
+  );
+};
+
+// ─── Project icons (all original) ─────────────────────────────────────────────
+const HAS_FAVICON = new Set([
+  "WorkOnPro Android",
+  "WorkOnPro IOS",
+  "EstateOne Android",
+  "EstateOne IOS",
+  "Original Aso Ebi IOS",
+  "Original Aso Ebi",
+]);
+const projectIcons = {
+  ChatWot: (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+    </svg>
+  ),
+  MailSift: (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+      <polyline points="22,6 12,13 2,6" />
+    </svg>
+  ),
+  ShipMeter: (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+    </svg>
+  ),
+  Markly: (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+      <line x1="16" y1="2" x2="16" y2="6" />
+      <line x1="8" y1="2" x2="8" y2="6" />
+      <line x1="3" y1="10" x2="21" y2="10" />
+      <path d="M8 14l2 2 4-4" />
+    </svg>
+  ),
+  JSON2Table: (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <polyline points="14 2 14 8 20 8" />
+      <line x1="8" y1="13" x2="16" y2="13" />
+      <line x1="8" y1="17" x2="16" y2="17" />
+      <line x1="8" y1="9" x2="10" y2="9" />
+    </svg>
+  ),
+  DotSnap: (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="2" y="4" width="20" height="16" rx="2" />
+      <path d="M8 8h.01M12 8h.01M16 8h.01M8 12h8M8 16h5" />
+    </svg>
+  ),
+  CommitDiff: (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="12" cy="12" r="4" />
+      <line x1="1.05" y1="12" x2="7" y2="12" />
+      <line x1="17.01" y1="12" x2="22.96" y2="12" />
+    </svg>
+  ),
+  Snippad: (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <polyline points="16 18 22 12 16 6" />
+      <polyline points="8 6 2 12 8 18" />
+    </svg>
+  ),
+  Renthall: (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z" />
+      <polyline points="9 22 9 12 15 12 15 22" />
+    </svg>
+  ),
+  "Oneway Template": (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="3" y="3" width="18" height="18" rx="2" />
+      <path d="M3 9h18M9 21V9" />
+    </svg>
+  ),
+  weddingflix: (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+    </svg>
+  ),
+  Vestarplus: (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+    </svg>
+  ),
+  "Vestarplus Design System": (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="12" cy="12" r="3" />
+      <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" />
+    </svg>
+  ),
+  "inteck-design-system-mobile": (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="5" y="2" width="14" height="20" rx="2" />
+      <line x1="9" y1="7" x2="15" y2="7" />
+      <line x1="9" y1="11" x2="15" y2="11" />
+      <line x1="9" y1="15" x2="13" y2="15" />
+    </svg>
+  ),
+  vplusacademy: (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+      <path d="M6 12v5c3 3 9 3 12 0v-5" />
+    </svg>
+  ),
+  "FDGS Energy group": (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+    </svg>
+  ),
+  "Falcon Wood Exploration Company": (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <line x1="2" y1="12" x2="22" y2="12" />
+      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+    </svg>
+  ),
+  Beternal: (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="3" y="3" width="18" height="18" rx="2" />
+      <circle cx="8.5" cy="8.5" r="1.5" />
+      <polyline points="21 15 16 10 5 21" />
+    </svg>
+  ),
+  "Hair Master": (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M3 5c0 0 2-1 5 0s5 3 8 2 5-3 5-3" />
+      <path d="M3 10c0 0 2-1 5 0s5 3 8 2 5-3 5-3" />
+      <path d="M3 15c0 0 2-1 5 0s5 3 8 2 5-3 5-3" />
+    </svg>
+  ),
+  Pirobi: (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <polygon points="23 7 16 12 23 17 23 7" />
+      <rect x="1" y="5" width="15" height="14" rx="2" />
+    </svg>
+  ),
+};
+
+const ProjectIcon = ({ proj }) => {
+  const hF = HAS_FAVICON.has(proj.name);
+  const cI = projectIcons[proj.name];
+  let h = "";
+  try {
+    h = new URL(proj.link).hostname;
+  } catch {}
+  if (hF && h)
+    return (
+      <img
+        src={`https://www.google.com/s2/favicons?domain=${h}&sz=32`}
+        alt=""
+        width={16}
+        height={16}
+        style={{ borderRadius: 4, flexShrink: 0 }}
+      />
+    );
+  if (cI)
+    return (
+      <span
+        style={{
+          width: 16,
+          height: 16,
+          flexShrink: 0,
+          color: "var(--text-muted,#888)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {cI}
+      </span>
+    );
+  return null;
+};
+
+// ─── Audio wave ───────────────────────────────────────────────────────────────
 const AudioWave = () => {
-  const delays = ["0ms", "120ms", "80ms", "200ms", "160ms"];
-  const heights = [8, 16, 12, 20, 8];
+  const ds = ["0ms", "120ms", "80ms", "200ms", "160ms"],
+    hs = [8, 16, 12, 20, 8];
   return (
     <div
       style={{
@@ -99,7 +1520,7 @@ const AudioWave = () => {
         flexShrink: 0,
       }}
     >
-      {heights.map((h, i) => (
+      {hs.map((h, i) => (
         <span
           key={i}
           style={{
@@ -109,7 +1530,7 @@ const AudioWave = () => {
             borderRadius: 99,
             background: "var(--accent)",
             opacity: 0.8,
-            animation: `nowPlayingWave 900ms ease-in-out ${delays[i]} infinite`,
+            animation: `nowPlayingWave 900ms ease-in-out ${ds[i]} infinite`,
           }}
         />
       ))}
@@ -117,201 +1538,6 @@ const AudioWave = () => {
   );
 };
 
-// ─── Music Platform Links ──────────────────────────────────────────────────
-const MusicLinks = ({ track, compact = false }) => {
-  const query = encodeURIComponent(`${track.title} ${track.artist}`);
-  const links = [
-    {
-      label: "YouTube Music",
-      href: `https://music.youtube.com/search?q=${query}`,
-      icon: <YTMusicIcon />,
-    },
-    {
-      label: "Spotify",
-      href: `https://open.spotify.com/search/${query}`,
-      icon: <SpotifyIcon />,
-    },
-    {
-      label: "Apple Music",
-      href: `https://music.apple.com/search?term=${query}`,
-      icon: <AppleMusicIcon />,
-    },
-  ];
-  if (compact) {
-    return (
-      <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
-        {links.map((l) => (
-          <a
-            key={l.label}
-            href={l.href}
-            target="_blank"
-            rel="noreferrer"
-            title={`Play on ${l.label}`}
-            style={{
-              display: "grid",
-              placeItems: "center",
-              width: 30,
-              height: 30,
-              borderRadius: "50%",
-              border: "1px solid rgba(182,174,170,0.15)",
-              background: "rgba(182,174,170,0.04)",
-              color: "var(--text-muted)",
-              textDecoration: "none",
-              transition: "all 0.2s",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "rgba(182,174,170,0.3)";
-              e.currentTarget.style.background = "rgba(182,174,170,0.1)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "rgba(182,174,170,0.15)";
-              e.currentTarget.style.background = "rgba(182,174,170,0.04)";
-            }}
-          >
-            <span style={{ width: 14, height: 14, display: "block" }}>
-              {l.icon}
-            </span>
-          </a>
-        ))}
-      </div>
-    );
-  }
-  return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "1fr 1fr 1fr",
-        gap: 8,
-        marginTop: 20,
-      }}
-    >
-      {links.map((l) => (
-        <a
-          key={l.label}
-          href={l.href}
-          target="_blank"
-          rel="noreferrer"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 6,
-            height: 38,
-            borderRadius: 6,
-            border: "1px solid rgba(182,174,170,0.15)",
-            background: "rgba(182,174,170,0.04)",
-            color: "var(--text-muted)",
-            textDecoration: "none",
-            fontSize: 11,
-            fontFamily: "'IBM Plex Mono', monospace",
-            transition: "all 0.2s",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = "rgba(244,165,229,0.28)";
-            e.currentTarget.style.background = "rgba(244,165,229,0.08)";
-            e.currentTarget.style.color = "var(--accent)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = "rgba(182,174,170,0.15)";
-            e.currentTarget.style.background = "rgba(182,174,170,0.04)";
-            e.currentTarget.style.color = "var(--text-muted)";
-          }}
-        >
-          <span
-            style={{ width: 14, height: 14, display: "block", flexShrink: 0 }}
-          >
-            {l.icon}
-          </span>
-          <span
-            style={{
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {l.label}
-          </span>
-        </a>
-      ))}
-    </div>
-  );
-};
-
-// ─── Album Cover ───────────────────────────────────────────────────────────
-const AlbumCover = ({ image, size }) => {
-  const [imgError, setImgError] = useState(false);
-  const isLarge = size === "large";
-  const w = isLarge ? "100%" : 52;
-  const h = isLarge ? 200 : 52;
-
-  if (!image || imgError) {
-    return (
-      <div
-        style={{
-          width: w,
-          height: h,
-          borderRadius: 6,
-          background: "rgba(182,174,170,0.08)",
-          border: "1px solid rgba(182,174,170,0.12)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          flexShrink: 0,
-        }}
-      >
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="rgba(182,174,170,0.3)"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <circle cx="12" cy="12" r="10" />
-          <circle cx="12" cy="12" r="3" />
-        </svg>
-      </div>
-    );
-  }
-
-  return (
-    <div style={{ position: "relative", flexShrink: 0, width: w, height: h }}>
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          borderRadius: 6,
-          backgroundImage: `url(${image})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          opacity: 0.4,
-          filter: "blur(18px)",
-          transform: "scale(1.1)",
-        }}
-      />
-      <img
-        src={image}
-        alt=""
-        onError={() => setImgError(true)}
-        referrerPolicy="no-referrer"
-        style={{
-          position: "relative",
-          width: "100%",
-          height: "100%",
-          borderRadius: 6,
-          objectFit: "cover",
-          border: "1px solid rgba(255,255,255,0.1)",
-          boxShadow: "0 12px 30px rgba(0,0,0,0.3)",
-        }}
-        loading="lazy"
-      />
-    </div>
-  );
-};
-
-// ─── SVG Icons ────────────────────────────────────────────────────────────
 const YTMusicIcon = () => (
   <svg viewBox="0 0 24 24" style={{ width: "100%", height: "100%" }}>
     <circle cx="12" cy="12" r="10" fill="#FF0000" />
@@ -351,20 +1577,206 @@ const AppleMusicIcon = () => (
   </svg>
 );
 
-// ─── Modal via Portal (fixes fixed-positioning issue) ─────────────────────
+const MusicLinks = ({ track, compact = false }) => {
+  const q = encodeURIComponent(`${track.title} ${track.artist}`);
+  const ls = [
+    {
+      label: "YouTube Music",
+      href: `https://music.youtube.com/search?q=${q}`,
+      icon: <YTMusicIcon />,
+    },
+    {
+      label: "Spotify",
+      href: `https://open.spotify.com/search/${q}`,
+      icon: <SpotifyIcon />,
+    },
+    {
+      label: "Apple Music",
+      href: `https://music.apple.com/search?term=${q}`,
+      icon: <AppleMusicIcon />,
+    },
+  ];
+  if (compact)
+    return (
+      <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
+        {ls.map((l) => (
+          <a
+            key={l.label}
+            href={l.href}
+            target="_blank"
+            rel="noreferrer"
+            title={`Play on ${l.label}`}
+            style={{
+              display: "grid",
+              placeItems: "center",
+              width: 30,
+              height: 30,
+              borderRadius: "50%",
+              border: "1px solid rgba(182,174,170,0.15)",
+              background: "rgba(182,174,170,0.04)",
+              color: "var(--text-muted)",
+              textDecoration: "none",
+              transition: "all 0.2s",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = "rgba(182,174,170,0.3)";
+              e.currentTarget.style.background = "rgba(182,174,170,0.1)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = "rgba(182,174,170,0.15)";
+              e.currentTarget.style.background = "rgba(182,174,170,0.04)";
+            }}
+          >
+            <span style={{ width: 14, height: 14, display: "block" }}>
+              {l.icon}
+            </span>
+          </a>
+        ))}
+      </div>
+    );
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "1fr 1fr 1fr",
+        gap: 8,
+        marginTop: 20,
+      }}
+    >
+      {ls.map((l) => (
+        <a
+          key={l.label}
+          href={l.href}
+          target="_blank"
+          rel="noreferrer"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 6,
+            height: 38,
+            borderRadius: 6,
+            border: "1px solid rgba(182,174,170,0.15)",
+            background: "rgba(182,174,170,0.04)",
+            color: "var(--text-muted)",
+            textDecoration: "none",
+            fontSize: 11,
+            fontFamily: "'IBM Plex Mono',monospace",
+            transition: "all 0.2s",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = "rgba(244,165,229,0.28)";
+            e.currentTarget.style.background = "rgba(244,165,229,0.08)";
+            e.currentTarget.style.color = "var(--accent)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = "rgba(182,174,170,0.15)";
+            e.currentTarget.style.background = "rgba(182,174,170,0.04)";
+            e.currentTarget.style.color = "var(--text-muted)";
+          }}
+        >
+          <span
+            style={{ width: 14, height: 14, display: "block", flexShrink: 0 }}
+          >
+            {l.icon}
+          </span>
+          <span
+            style={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {l.label}
+          </span>
+        </a>
+      ))}
+    </div>
+  );
+};
+
+const AlbumCover = ({ image, size }) => {
+  const [err, setErr] = useState(false);
+  const iL = size === "large";
+  const w = iL ? "100%" : 52,
+    h = iL ? 200 : 52;
+  if (!image || err)
+    return (
+      <div
+        style={{
+          width: w,
+          height: h,
+          borderRadius: 6,
+          background: "rgba(182,174,170,0.08)",
+          border: "1px solid rgba(182,174,170,0.12)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexShrink: 0,
+        }}
+      >
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="rgba(182,174,170,0.3)"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <circle cx="12" cy="12" r="3" />
+        </svg>
+      </div>
+    );
+  return (
+    <div style={{ position: "relative", flexShrink: 0, width: w, height: h }}>
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          borderRadius: 6,
+          backgroundImage: `url(${image})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          opacity: 0.4,
+          filter: "blur(18px)",
+          transform: "scale(1.1)",
+        }}
+      />
+      <img
+        src={image}
+        alt=""
+        onError={() => setErr(true)}
+        referrerPolicy="no-referrer"
+        style={{
+          position: "relative",
+          width: "100%",
+          height: "100%",
+          borderRadius: 6,
+          objectFit: "cover",
+          border: "1px solid rgba(255,255,255,0.1)",
+          boxShadow: "0 12px 30px rgba(0,0,0,0.3)",
+        }}
+        loading="lazy"
+      />
+    </div>
+  );
+};
+
 const NowPlayingModal = ({ track, onClose }) => {
   useEffect(() => {
-    const onKey = (e) => {
+    const h = (e) => {
       if (e.key === "Escape") onClose();
     };
-    window.addEventListener("keydown", onKey);
+    window.addEventListener("keydown", h);
     document.body.style.overflow = "hidden";
     return () => {
-      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("keydown", h);
       document.body.style.overflow = "";
     };
   }, [onClose]);
-
   return createPortal(
     <div
       style={{
@@ -377,7 +1789,6 @@ const NowPlayingModal = ({ track, onClose }) => {
         padding: 20,
       }}
     >
-      {/* Backdrop */}
       <div
         onClick={onClose}
         style={{
@@ -387,7 +1798,6 @@ const NowPlayingModal = ({ track, onClose }) => {
           animation: "npFadeIn 0.18s ease-out",
         }}
       />
-      {/* Card */}
       <div
         style={{
           position: "relative",
@@ -399,7 +1809,7 @@ const NowPlayingModal = ({ track, onClose }) => {
           background: "#0f0e0c",
           padding: 20,
           boxShadow: "0 32px 100px rgba(0,0,0,0.7)",
-          animation: "npSlideUp 0.22s cubic-bezier(0.22, 1, 0.36, 1)",
+          animation: "npSlideUp 0.22s cubic-bezier(0.22,1,0.36,1)",
           overflow: "hidden",
         }}
       >
@@ -434,12 +1844,10 @@ const NowPlayingModal = ({ track, onClose }) => {
             fontSize: 13,
             transition: "all 0.2s",
           }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.color = "#f5f0ee";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.color = "rgba(182,174,170,0.7)";
-          }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = "#f5f0ee")}
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.color = "rgba(182,174,170,0.7)")
+          }
         >
           ✕
         </button>
@@ -457,7 +1865,7 @@ const NowPlayingModal = ({ track, onClose }) => {
               <p
                 style={{
                   fontSize: 11,
-                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontFamily: "'IBM Plex Mono',monospace",
                   color: "rgba(182,174,170,0.5)",
                   margin: 0,
                 }}
@@ -471,7 +1879,7 @@ const NowPlayingModal = ({ track, onClose }) => {
                 marginTop: 10,
                 marginBottom: 0,
                 fontSize: 20,
-                fontFamily: "'IBM Plex Mono', monospace",
+                fontFamily: "'IBM Plex Mono',monospace",
                 fontWeight: 500,
                 color: "#f5f0ee",
                 lineHeight: 1.3,
@@ -484,7 +1892,7 @@ const NowPlayingModal = ({ track, onClose }) => {
                 marginTop: 5,
                 marginBottom: 0,
                 fontSize: 14,
-                fontFamily: "'IBM Plex Mono', monospace",
+                fontFamily: "'IBM Plex Mono',monospace",
                 color: "rgba(182,174,170,0.8)",
               }}
             >
@@ -496,7 +1904,7 @@ const NowPlayingModal = ({ track, onClose }) => {
                   marginTop: 8,
                   marginBottom: 0,
                   fontSize: 12,
-                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontFamily: "'IBM Plex Mono',monospace",
                   color: "rgba(182,174,170,0.45)",
                 }}
               >
@@ -512,7 +1920,7 @@ const NowPlayingModal = ({ track, onClose }) => {
                   borderRadius: 99,
                   border: "1px solid rgba(255,255,255,0.1)",
                   fontSize: 10,
-                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontFamily: "'IBM Plex Mono',monospace",
                   color: "rgba(182,174,170,0.5)",
                   textTransform: "capitalize",
                 }}
@@ -529,37 +1937,34 @@ const NowPlayingModal = ({ track, onClose }) => {
   );
 };
 
-// ─── Now Playing Widget ────────────────────────────────────────────────────
 const NowPlaying = () => {
   const [track, setTrack] = useState(null);
   const [loaded, setLoaded] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-
   useEffect(() => {
-    let cancelled = false;
-    async function fetchTrack() {
+    let c = false;
+    async function ft() {
       try {
-        const res = await fetch("/api/now-playing");
-        const data = await res.json();
-        if (!cancelled) {
-          setTrack(data.track ?? null);
+        const r = await fetch("/api/now-playing"),
+          d = await r.json();
+        if (!c) {
+          setTrack(d.track ?? null);
           setLoaded(true);
         }
       } catch {
-        if (!cancelled) {
+        if (!c) {
           setTrack(null);
           setLoaded(true);
         }
       }
     }
-    fetchTrack();
-    const interval = setInterval(fetchTrack, 30_000);
+    ft();
+    const iv = setInterval(ft, 30_000);
     return () => {
-      cancelled = true;
-      clearInterval(interval);
+      c = true;
+      clearInterval(iv);
     };
   }, []);
-
   const base = {
     display: "flex",
     alignItems: "center",
@@ -571,7 +1976,6 @@ const NowPlaying = () => {
     transition: "all 0.25s",
     backdropFilter: "blur(8px)",
   };
-
   if (!loaded)
     return (
       <div style={base}>
@@ -587,7 +1991,7 @@ const NowPlaying = () => {
         <span
           style={{
             fontSize: 13,
-            fontFamily: "'IBM Plex Mono', monospace",
+            fontFamily: "'IBM Plex Mono',monospace",
             color: "var(--text-faint)",
           }}
         >
@@ -595,7 +1999,6 @@ const NowPlaying = () => {
         </span>
       </div>
     );
-
   if (!track)
     return (
       <div style={base}>
@@ -616,7 +2019,7 @@ const NowPlaying = () => {
         <span
           style={{
             fontSize: 13,
-            fontFamily: "'IBM Plex Mono', monospace",
+            fontFamily: "'IBM Plex Mono',monospace",
             color: "var(--text-faint)",
           }}
         >
@@ -624,7 +2027,6 @@ const NowPlaying = () => {
         </span>
       </div>
     );
-
   return (
     <>
       <div
@@ -659,7 +2061,7 @@ const NowPlaying = () => {
             <p
               style={{
                 fontSize: 11,
-                fontFamily: "'IBM Plex Mono', monospace",
+                fontFamily: "'IBM Plex Mono',monospace",
                 color: "var(--text-faint)",
                 margin: "0 0 3px",
                 whiteSpace: "nowrap",
@@ -672,7 +2074,7 @@ const NowPlaying = () => {
             <p
               style={{
                 fontSize: 14,
-                fontFamily: "'IBM Plex Mono', monospace",
+                fontFamily: "'IBM Plex Mono',monospace",
                 color: "var(--text-primary)",
                 margin: 0,
                 fontWeight: 500,
@@ -697,59 +2099,101 @@ const NowPlaying = () => {
   );
 };
 
-// ─── Main Component ────────────────────────────────────────────────────────
+// ─── MAIN PAGE ────────────────────────────────────────────────────────────────
+const PREVIEW = 4;
+
 const MainPage = () => {
   const currentProject = project[0];
-  const [isDark, setIsDark] = useState(true);
   const [mounted, setMounted] = useState(false);
+  const [weatherData, setWeatherData] = useState(null);
+  const [weatherCondition, setWeatherCondition] = useState(null);
+  const [showAll, setShowAll] = useState(false);
+  const [gbOpen, setGbOpen] = useState(false);
+
+  useEffect(() => {
+    window.__openGuestbook = () => setGbOpen(true);
+    return () => {
+      delete window.__openGuestbook;
+    };
+  }, []);
 
   useEffect(() => {
     setMounted(true);
-    const saved = localStorage.getItem("theme");
-    if (saved) setIsDark(saved === "dark");
-  }, []);
 
-  const toggleTheme = () => {
-    const next = !isDark;
-    setIsDark(next);
-    localStorage.setItem("theme", next ? "dark" : "light");
-  };
+    // ── Fetch real weather from Open-Meteo ──────────────────────────────────
+    navigator.geolocation?.getCurrentPosition(
+      async ({ coords }) => {
+        try {
+          const res = await fetch(
+            `https://api.open-meteo.com/v1/forecast?latitude=${coords.latitude}&longitude=${coords.longitude}&current=temperature_2m,weathercode&timezone=auto`,
+          );
+          const data = await res.json();
+          const code = data.current.weathercode;
+          const tz = data.timezone_abbreviation || "";
+          const temp = Math.round(data.current.temperature_2m);
+          setWeatherData({ temp, code, tz });
+          const localHour = new Date().getHours();
+          setWeatherCondition(wmoToCondition(code, localHour));
+        } catch {
+          setWeatherCondition("cloudy");
+        }
+      },
+      () => setWeatherCondition("cloudy"),
+    );
+  }, []);
 
   if (!mounted) return null;
 
+  const visible = showAll ? project : project.slice(0, PREVIEW);
+  const hasMore = project.length > PREVIEW;
+
+  // CSS class that drives the token theme
+  const weatherClass = weatherCondition
+    ? `weather-${weatherCondition}`
+    : "weather-night";
+
+  const rowBtn = (accent = false) => ({
+    display: "flex",
+    alignItems: "center",
+    gap: 8,
+    padding: "7px 16px",
+    borderRadius: 6,
+    border: `1px solid ${accent ? "var(--bio-border)" : "var(--border)"}`,
+    background: accent ? "var(--bio-bg)" : "var(--surface)",
+    color: "var(--text-muted)",
+    fontFamily: "'IBM Plex Mono',monospace",
+    fontSize: 12,
+    cursor: "pointer",
+    transition: "all 0.2s",
+    backdropFilter: "blur(8px)",
+  });
+
   return (
-    <div className={isDark ? "theme-dark" : "theme-light"}>
+    // ── weather-root gets the condition class; drives all CSS tokens ─────────
+    <div className={`weather-root ${weatherClass}`}>
       <style>{`
-        @keyframes nowPlayingWave {
-          0%, 100% { transform: scaleY(0.45); opacity: 0.45; }
-          50% { transform: scaleY(1); opacity: 1; }
-        }
-        @keyframes npFadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes npSlideUp {
-          from { opacity: 0; transform: scale(0.95) translateY(16px); }
-          to   { opacity: 1; transform: scale(1) translateY(0); }
-        }
+        @keyframes nowPlayingWave{0%,100%{transform:scaleY(0.45);opacity:0.45;}50%{transform:scaleY(1);opacity:1;}}
+        @keyframes npFadeIn{from{opacity:0;}to{opacity:1;}}
+        @keyframes npSlideUp{from{opacity:0;transform:scale(0.95) translateY(16px);}to{opacity:1;transform:scale(1) translateY(0);}}
+        @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
       `}</style>
 
-      <div className="cantsyat">
-        <button
-          className="theme-toggle"
-          onClick={toggleTheme}
-          aria-label="Toggle theme"
-        >
-          <span className="toggle-track">
-            <span className="toggle-thumb">
-              {isDark ? <MoonIcon /> : <SunIcon />}
-            </span>
-          </span>
-        </button>
+      {/* ── Cinematic weather background (z-index 0 sky, 1 particles) ──────── */}
+      <WeatherAmbient condition={weatherCondition} />
 
+      {/* ── Floating UI (z-index 200) ─────────────────────────────────────── */}
+      <CommandPalette projects={project} />
+      {gbOpen && <GuestbookModal onClose={() => setGbOpen(false)} />}
+
+      {/* ── Page content (z-index 2 via .cantsyat / .mainn) ──────────────── */}
+      <div className="cantsyat">
         <div className="mainn">
-          {/* Header */}
+          {/* ── Header ────────────────────────────────────────────────────── */}
           <div className="djhdud">
             <div>
               <div className="nameofdev">Timothy Okoduwa</div>
-              <div className="conff">
+              <VibeBar available={true} weatherData={weatherData} />
+              <div className="conff" style={{ marginTop: 10 }}>
                 <a href="mailto:timothyokoduwa4@gmail.com" className="email">
                   timothyokoduwa4@gmail.com
                 </a>
@@ -760,32 +2204,36 @@ const MainPage = () => {
             </div>
           </div>
 
-          {/* Bio */}
+          {/* ── Bio ───────────────────────────────────────────────────────── */}
           <div className="infoss">
             Hello and welcome to my digital space! I&apos;m Timothy Okoduwa, a
             passionate problem solver who thrives on creating impactful software
-            solutions. <br />
+            solutions.
+            <br />
             <br />
             I&apos;m always on the hunt for knowledge, whether it&apos;s through
             tutorials, documentation, articles, or any resource that feeds my
-            curiosity. <br />
+            curiosity.
+            <br />
             My ultimate aim is to refine my skills and reach the pinnacle of
-            engineering excellence. <br />
+            engineering excellence.
+            <br />
             <br />
             At the moment, I&apos;m building something exciting — a software
             called{" "}
             <a href={currentProject.link} className="email">
               {currentProject.name}
             </a>
-            . <br />
+            .
             <br />
-            While I primarily work in the TypeScript/JavaScript ecosystem,{" "}
+            <br />
+            While I primarily work in the TypeScript/JavaScript ecosystem,
             <br />
             I&apos;m also diving into other fascinating languages like Dart,
             Python, and Solidity.
           </div>
 
-          {/* Now Playing */}
+          {/* ── Now Playing ───────────────────────────────────────────────── */}
           <div className="projj" style={{ marginTop: 40 }}>
             <div className="lettl">What am I listening to?</div>
             <div style={{ marginTop: 14 }}>
@@ -793,7 +2241,7 @@ const MainPage = () => {
             </div>
           </div>
 
-          {/* Tech Stack */}
+          {/* ── Tech Stack ────────────────────────────────────────────────── */}
           <div className="projj" style={{ marginTop: 50 }}>
             <div className="lettl">Tech Stack</div>
             <div className="tech-grid">
@@ -809,14 +2257,20 @@ const MainPage = () => {
             </div>
           </div>
 
-          {/* Projects */}
-          <div className="projj">
+          {/* ── Projects ──────────────────────────────────────────────────── */}
+          <div className="projj" id="section-projects">
             <div className="lettl">Projects</div>
             <div>
-              {project.map((proj, index) => (
+              {visible.map((proj, index) => (
                 <div key={index} className="project-item">
                   <div className="secondp">
-                    <div className="firstc">{proj.name}</div>
+                    <div
+                      className="firstc"
+                      style={{ display: "flex", alignItems: "center", gap: 8 }}
+                    >
+                      <ProjectIcon proj={proj} />
+                      {proj.name}
+                    </div>
                     <div className="secondc">({proj.type})</div>
                   </div>
                   <div className="expp">{proj.description}</div>
@@ -902,7 +2356,96 @@ const MainPage = () => {
               ))}
             </div>
 
-            {/* Social */}
+            <div
+              style={{
+                marginTop: 16,
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                flexWrap: "wrap",
+              }}
+            >
+              {hasMore && (
+                <button
+                  style={rowBtn()}
+                  onClick={() => setShowAll((v) => !v)}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = "var(--border-hover)";
+                    e.currentTarget.style.color = "var(--accent)";
+                    e.currentTarget.style.background = "var(--accent-dim)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = "var(--border)";
+                    e.currentTarget.style.color = "var(--text-muted)";
+                    e.currentTarget.style.background = "var(--surface)";
+                  }}
+                >
+                  {showAll ? (
+                    <>
+                      <svg
+                        width="11"
+                        height="11"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      >
+                        <polyline points="18 15 12 9 6 15" />
+                      </svg>
+                      Show less
+                    </>
+                  ) : (
+                    <>
+                      <svg
+                        width="11"
+                        height="11"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      >
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                      Show all {project.length} projects
+                    </>
+                  )}
+                </button>
+              )}
+              <button
+                id="section-guestbook"
+                style={rowBtn(true)}
+                onClick={() => setGbOpen(true)}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = "var(--border-hover)";
+                  e.currentTarget.style.color = "var(--accent)";
+                  e.currentTarget.style.background = "var(--accent-dim)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = "var(--bio-border)";
+                  e.currentTarget.style.color = "var(--text-muted)";
+                  e.currentTarget.style.background = "var(--bio-bg)";
+                }}
+              >
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M12 20h9" />
+                  <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                </svg>
+                Guestbook
+              </button>
+            </div>
+
+            {/* ── Social / More ────────────────────────────────────────────── */}
             <div className="kfie">
               <div className="lettl">More</div>
               <div className="social-list">
@@ -954,7 +2497,6 @@ const MainPage = () => {
                   </div>
                 </a>
               </div>
-
               <div className="ouuu">
                 <div className="lineee"></div>
                 <div style={{ marginTop: 12 }}>
