@@ -1,7 +1,16 @@
 /** @format */
 
 const project = [
-    {
+  {
+    name: "ChatWot",
+    description:
+      "A live chat SaaS that lets businesses embed a real-time chat widget on any website with a single script tag. Features instant bidirectional messaging via Firebase Realtime DB, image sharing via Cloudinary, live visitor tracking, and a clean dashboard. Offers a 3-month free trial with Paystack billing for the Pro tier, which unlocks custom branding, priority support, and badge removal.",
+    link: "https://chatwot.vercel.app/",
+    type: "SaaS / Customer support & live chat tool",
+    github: "",
+    npm: "",
+  },
+  {
     name: "MailSift",
     description:
       "A webmail discovery tool that scans thousands of email domains to find working webmail login pages. Features a SIFT token economy with Crypto payments, bulk email import via .txt/.csv/.pdf, structured CSV and PDF report exports, and a per-use pricing model with no subscriptions.",
@@ -84,7 +93,7 @@ const project = [
     github: "",
     npm: "",
   },
-      {
+  {
     name: "EstateOne Android",
     description:
       "Estate management system for property administrators to streamline visitor check-ins, maintenance, emergency alerts, and access control — designed to simplify property admin workflows. (Productivity category on Google Play)",
@@ -93,7 +102,7 @@ const project = [
     github: "",
     npm: "",
   },
-      {
+  {
     name: "EstateOne IOS",
     description:
       "Estate management system for property administrators to streamline visitor check-ins, maintenance, emergency alerts, and access control — designed to simplify property admin workflows. (Productivity category on Google Play)",
@@ -102,7 +111,7 @@ const project = [
     github: "",
     npm: "",
   },
-     {
+  {
     name: "Original Aso Ebi IOS",
     description:
       "Original Aso-Ebi is a top fabric store in Lagos Island, Nigeria, offering a wide range of high-quality traditional and modern fabrics for weddings and cultural events. They blend heritage with fashion and focus on customer satisfaction with personalized service.",
