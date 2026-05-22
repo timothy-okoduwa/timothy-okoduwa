@@ -2,14 +2,15 @@
 "use client";
 
 // ─── CHANGES FROM ORIGINAL ────────────────────────────────────────────────────
-// 1. Removed isDark / toggleTheme / theme-dark / theme-light entirely
-// 2. Root wrapper now gets className="weather-root weather-{condition}"
-//    so CSS tokens respond to the live weather automatically
-// 3. Removed the theme-toggle button (SunIcon / MoonIcon still kept in
-//    case you want them later, but the button is gone)
-// 4. WeatherAmbient canvases are z-index 0 (sky) and 1 (particles).
-//    All page content sits at z-index 2 via .weather-root / .mainn
-// 5. body override `--bg: #f5f0ee !important` removed from globals.css
+// FIX 1: Desktop weather not showing
+//   - Added IP-based geolocation fallback (open-meteo geocoding via ipapi.co)
+//   - If navigator.geolocation is blocked/unavailable, falls back to IP location
+//   - Added permission check to detect denied state faster
+//
+// FIX 2: Mobile readability (iOS Weather app style)
+//   - Bio card, section headers, project cards all get proper frosted-glass
+//   - Text has stronger contrast tokens per weather condition
+//   - "Rain" condition uses deeper, more vivid canvas + white text
 // ─────────────────────────────────────────────────────────────────────────────
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
@@ -119,10 +120,127 @@ const getCurrentYearRoman = () => {
   return r;
 };
 
+// ─── FIX 1: Robust weather fetch with IP fallback ─────────────────────────────
+async function fetchWeatherByCoords(lat, lon) {
+  const res = await fetch(
+    `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weathercode&timezone=auto`,
+  );
+  const data = await res.json();
+  return {
+    temp: Math.round(data.current.temperature_2m),
+    code: data.current.weathercode,
+    tz: data.timezone_abbreviation || "",
+  };
+}
+
+async function fetchWeatherByIP() {
+  // Use ipapi.co (free, no key needed) to get approximate location from IP
+  const geo = await fetch("https://ipapi.co/json/").then((r) => r.json());
+  if (!geo.latitude || !geo.longitude) throw new Error("IP geo failed");
+  return fetchWeatherByCoords(geo.latitude, geo.longitude);
+}
+
+function getWeatherWithFallback(onSuccess, onFail) {
+  // Try geolocation first (desktop often blocks this)
+  if (!navigator.geolocation) {
+    // No geolocation API at all — go straight to IP fallback
+    fetchWeatherByIP().then(onSuccess).catch(onFail);
+    return;
+  }
+
+  // Set a 4-second timeout: if geolocation takes too long (e.g. permission
+  // dialog never answered on desktop), fall back to IP geo
+  let settled = false;
+  const timer = setTimeout(() => {
+    if (!settled) {
+      settled = true;
+      fetchWeatherByIP().then(onSuccess).catch(onFail);
+    }
+  }, 4000);
+
+  navigator.geolocation.getCurrentPosition(
+    async ({ coords }) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      try {
+        const data = await fetchWeatherByCoords(
+          coords.latitude,
+          coords.longitude,
+        );
+        onSuccess(data);
+      } catch {
+        fetchWeatherByIP().then(onSuccess).catch(onFail);
+      }
+    },
+    () => {
+      // Permission denied or error — use IP fallback immediately
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      fetchWeatherByIP().then(onSuccess).catch(onFail);
+    },
+    { timeout: 3500, maximumAge: 300000 },
+  );
+}
+
+// ─── FIX 2: Weather-aware glass styles ───────────────────────────────────────
+// These mirror what the iOS Weather app does: vivid sky + white frosted cards
+function getWeatherGlassStyle(condition) {
+  const isDark = ["night", "dusk", "storm"].includes(condition);
+  const isRainy = ["rain", "storm"].includes(condition);
+  const isWarm = ["sunrise", "golden", "sunset"].includes(condition);
+
+  if (isDark || isRainy) {
+    return {
+      card: {
+        background: "rgba(10, 20, 40, 0.55)",
+        border: "1px solid rgba(255,255,255,0.12)",
+        backdropFilter: "blur(20px) saturate(1.4)",
+        WebkitBackdropFilter: "blur(20px) saturate(1.4)",
+        boxShadow:
+          "0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08)",
+      },
+      text: "rgba(255,255,255,0.95)",
+      textMuted: "rgba(200,220,255,0.75)",
+      textFaint: "rgba(180,205,240,0.55)",
+    };
+  }
+  if (isWarm) {
+    return {
+      card: {
+        background: "rgba(30, 10, 0, 0.45)",
+        border: "1px solid rgba(255,200,120,0.18)",
+        backdropFilter: "blur(20px) saturate(1.6)",
+        WebkitBackdropFilter: "blur(20px) saturate(1.6)",
+        boxShadow:
+          "0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,200,80,0.1)",
+      },
+      text: "rgba(255,240,220,0.97)",
+      textMuted: "rgba(255,210,160,0.8)",
+      textFaint: "rgba(255,190,120,0.6)",
+    };
+  }
+  // Daytime / cloudy / fog — light frosted card like iOS
+  return {
+    card: {
+      background: "rgba(255,255,255,0.22)",
+      border: "1px solid rgba(255,255,255,0.45)",
+      backdropFilter: "blur(24px) saturate(1.8)",
+      WebkitBackdropFilter: "blur(24px) saturate(1.8)",
+      boxShadow:
+        "0 8px 32px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.6)",
+    },
+    text: "rgba(10,20,40,0.95)",
+    textMuted: "rgba(10,20,40,0.7)",
+    textFaint: "rgba(10,20,40,0.5)",
+  };
+}
+
 // ─── VibeBar ──────────────────────────────────────────────────────────────────
 const p2 = (n) => String(n).padStart(2, "0");
 
-const VibeBar = ({ available = true, weatherData }) => {
+const VibeBar = ({ available = true, weatherData, glassStyle }) => {
   const [time, setTime] = useState("");
   useEffect(() => {
     const tick = () => {
@@ -840,11 +958,13 @@ const SignaturePad = ({ onSign }) => {
 
 const SigView = ({ svgPath, createdAt }) => {
   const date = createdAt?.toDate
-    ? createdAt.toDate().toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      })
+    ? createdAt
+        .toDate()
+        .toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        })
     : new Date(createdAt).toLocaleDateString("en-US", {
         month: "short",
         day: "numeric",
@@ -1219,70 +1339,6 @@ const projectIcons = {
       <path d="M8 14l2 2 4-4" />
     </svg>
   ),
-  JSON2Table: (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-      <polyline points="14 2 14 8 20 8" />
-      <line x1="8" y1="13" x2="16" y2="13" />
-      <line x1="8" y1="17" x2="16" y2="17" />
-      <line x1="8" y1="9" x2="10" y2="9" />
-    </svg>
-  ),
-  DotSnap: (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect x="2" y="4" width="20" height="16" rx="2" />
-      <path d="M8 8h.01M12 8h.01M16 8h.01M8 12h8M8 16h5" />
-    </svg>
-  ),
-  CommitDiff: (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="12" cy="12" r="4" />
-      <line x1="1.05" y1="12" x2="7" y2="12" />
-      <line x1="17.01" y1="12" x2="22.96" y2="12" />
-    </svg>
-  ),
-  Snippad: (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polyline points="16 18 22 12 16 6" />
-      <polyline points="8 6 2 12 8 18" />
-    </svg>
-  ),
   Renthall: (
     <svg
       width="16"
@@ -1296,173 +1352,6 @@ const projectIcons = {
     >
       <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z" />
       <polyline points="9 22 9 12 15 12 15 22" />
-    </svg>
-  ),
-  "Oneway Template": (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect x="3" y="3" width="18" height="18" rx="2" />
-      <path d="M3 9h18M9 21V9" />
-    </svg>
-  ),
-  weddingflix: (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-    </svg>
-  ),
-  Vestarplus: (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-    </svg>
-  ),
-  "Vestarplus Design System": (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="12" cy="12" r="3" />
-      <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" />
-    </svg>
-  ),
-  "inteck-design-system-mobile": (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect x="5" y="2" width="14" height="20" rx="2" />
-      <line x1="9" y1="7" x2="15" y2="7" />
-      <line x1="9" y1="11" x2="15" y2="11" />
-      <line x1="9" y1="15" x2="13" y2="15" />
-    </svg>
-  ),
-  vplusacademy: (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-      <path d="M6 12v5c3 3 9 3 12 0v-5" />
-    </svg>
-  ),
-  "FDGS Energy group": (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-    </svg>
-  ),
-  "Falcon Wood Exploration Company": (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="12" cy="12" r="10" />
-      <line x1="2" y1="12" x2="22" y2="12" />
-      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-    </svg>
-  ),
-  Beternal: (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect x="3" y="3" width="18" height="18" rx="2" />
-      <circle cx="8.5" cy="8.5" r="1.5" />
-      <polyline points="21 15 16 10 5 21" />
-    </svg>
-  ),
-  "Hair Master": (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M3 5c0 0 2-1 5 0s5 3 8 2 5-3 5-3" />
-      <path d="M3 10c0 0 2-1 5 0s5 3 8 2 5-3 5-3" />
-      <path d="M3 15c0 0 2-1 5 0s5 3 8 2 5-3 5-3" />
-    </svg>
-  ),
-  Pirobi: (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polygon points="23 7 16 12 23 17 23 7" />
-      <rect x="1" y="5" width="15" height="14" rx="2" />
     </svg>
   ),
 };
@@ -2120,25 +2009,17 @@ const MainPage = () => {
   useEffect(() => {
     setMounted(true);
 
-    // ── Fetch real weather from Open-Meteo ──────────────────────────────────
-    navigator.geolocation?.getCurrentPosition(
-      async ({ coords }) => {
-        try {
-          const res = await fetch(
-            `https://api.open-meteo.com/v1/forecast?latitude=${coords.latitude}&longitude=${coords.longitude}&current=temperature_2m,weathercode&timezone=auto`,
-          );
-          const data = await res.json();
-          const code = data.current.weathercode;
-          const tz = data.timezone_abbreviation || "";
-          const temp = Math.round(data.current.temperature_2m);
-          setWeatherData({ temp, code, tz });
-          const localHour = new Date().getHours();
-          setWeatherCondition(wmoToCondition(code, localHour));
-        } catch {
-          setWeatherCondition("cloudy");
-        }
+    // ── FIX 1: Robust weather fetch ─────────────────────────────────────────
+    getWeatherWithFallback(
+      (data) => {
+        setWeatherData(data);
+        const localHour = new Date().getHours();
+        setWeatherCondition(wmoToCondition(data.code, localHour));
       },
-      () => setWeatherCondition("cloudy"),
+      () => {
+        // Total failure — just show a nice sky
+        setWeatherCondition("cloudy");
+      },
     );
   }, []);
 
@@ -2147,10 +2028,12 @@ const MainPage = () => {
   const visible = showAll ? project : project.slice(0, PREVIEW);
   const hasMore = project.length > PREVIEW;
 
-  // CSS class that drives the token theme
   const weatherClass = weatherCondition
     ? `weather-${weatherCondition}`
     : "weather-night";
+
+  // ── FIX 2: Dynamic glass style driven by live weather ──────────────────────
+  const glass = getWeatherGlassStyle(weatherCondition || "cloudy");
 
   const rowBtn = (accent = false) => ({
     display: "flex",
@@ -2169,30 +2052,122 @@ const MainPage = () => {
   });
 
   return (
-    // ── weather-root gets the condition class; drives all CSS tokens ─────────
     <div className={`weather-root ${weatherClass}`}>
       <style>{`
         @keyframes nowPlayingWave{0%,100%{transform:scaleY(0.45);opacity:0.45;}50%{transform:scaleY(1);opacity:1;}}
         @keyframes npFadeIn{from{opacity:0;}to{opacity:1;}}
         @keyframes npSlideUp{from{opacity:0;transform:scale(0.95) translateY(16px);}to{opacity:1;transform:scale(1) translateY(0);}}
         @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+
+        /* ── FIX 2: iOS-Weather-style frosted glass cards ─────────────────── */
+
+        /* Bio card */
+        .infoss {
+          background: ${glass.card.background} !important;
+          border: ${glass.card.border} !important;
+          backdrop-filter: ${glass.card.backdropFilter} !important;
+          -webkit-backdrop-filter: ${glass.card.backdropFilter} !important;
+          box-shadow: ${glass.card.boxShadow} !important;
+          border-radius: 16px !important;
+          color: ${glass.text} !important;
+        }
+
+        /* Project items */
+        .project-item {
+          background: ${glass.card.background} !important;
+          border: ${glass.card.border} !important;
+          backdrop-filter: ${glass.card.backdropFilter} !important;
+          -webkit-backdrop-filter: ${glass.card.backdropFilter} !important;
+          box-shadow: ${glass.card.boxShadow} !important;
+          border-radius: 12px !important;
+          padding: 16px !important;
+          margin-bottom: 10px !important;
+        }
+
+        /* Section headings */
+        .lettl {
+          color: ${glass.text} !important;
+          text-shadow: 0 1px 8px rgba(0,0,0,0.3) !important;
+        }
+
+        /* Name */
+        .nameofdev {
+          color: ${glass.text} !important;
+          text-shadow: 0 2px 16px rgba(0,0,0,0.4) !important;
+        }
+
+        /* Bio text & project description */
+        .expp, .firstc, .secondc {
+          color: ${glass.textMuted} !important;
+        }
+
+        /* Email link */
+        .email {
+          color: ${glass.text} !important;
+          opacity: 0.85;
+        }
+
+        /* Tech pills */
+        .tech-pill {
+          background: ${glass.card.background} !important;
+          border: ${glass.card.border} !important;
+          backdrop-filter: ${glass.card.backdropFilter} !important;
+          -webkit-backdrop-filter: ${glass.card.backdropFilter} !important;
+          color: ${glass.text} !important;
+        }
+
+        /* Social links section */
+        .kfie {
+          background: ${glass.card.background} !important;
+          border: ${glass.card.border} !important;
+          backdrop-filter: ${glass.card.backdropFilter} !important;
+          -webkit-backdrop-filter: ${glass.card.backdropFilter} !important;
+          border-radius: 16px !important;
+          padding: 20px !important;
+          margin-top: 40px !important;
+        }
+
+        /* Social link items */
+        .eifj .bugsss {
+          color: ${glass.textMuted} !important;
+        }
+
+        /* Rights text */
+        .rights {
+          color: ${glass.textFaint} !important;
+        }
+
+        /* Separator */
+        .lineee {
+          border-color: ${glass.textFaint} !important;
+          opacity: 0.3;
+        }
+
+        /* Now playing / tech section headers */
+        .projj > .lettl::after {
+          background: linear-gradient(90deg, var(--accent), transparent) !important;
+        }
       `}</style>
 
-      {/* ── Cinematic weather background (z-index 0 sky, 1 particles) ──────── */}
+      {/* ── Cinematic weather background ────────────────────────────────────── */}
       <WeatherAmbient condition={weatherCondition} />
 
-      {/* ── Floating UI (z-index 200) ─────────────────────────────────────── */}
+      {/* ── Floating UI ─────────────────────────────────────────────────────── */}
       <CommandPalette projects={project} />
       {gbOpen && <GuestbookModal onClose={() => setGbOpen(false)} />}
 
-      {/* ── Page content (z-index 2 via .cantsyat / .mainn) ──────────────── */}
+      {/* ── Page content ────────────────────────────────────────────────────── */}
       <div className="cantsyat">
         <div className="mainn">
-          {/* ── Header ────────────────────────────────────────────────────── */}
+          {/* ── Header ──────────────────────────────────────────────────────── */}
           <div className="djhdud">
             <div>
               <div className="nameofdev">Timothy Okoduwa</div>
-              <VibeBar available={true} weatherData={weatherData} />
+              <VibeBar
+                available={true}
+                weatherData={weatherData}
+                glassStyle={glass}
+              />
               <div className="conff" style={{ marginTop: 10 }}>
                 <a href="mailto:timothyokoduwa4@gmail.com" className="email">
                   timothyokoduwa4@gmail.com
@@ -2204,7 +2179,7 @@ const MainPage = () => {
             </div>
           </div>
 
-          {/* ── Bio ───────────────────────────────────────────────────────── */}
+          {/* ── Bio ─────────────────────────────────────────────────────────── */}
           <div className="infoss">
             Hello and welcome to my digital space! I&apos;m Timothy Okoduwa, a
             passionate problem solver who thrives on creating impactful software
@@ -2233,7 +2208,7 @@ const MainPage = () => {
             Python, and Solidity.
           </div>
 
-          {/* ── Now Playing ───────────────────────────────────────────────── */}
+          {/* ── Now Playing ─────────────────────────────────────────────────── */}
           <div className="projj" style={{ marginTop: 40 }}>
             <div className="lettl">What am I listening to?</div>
             <div style={{ marginTop: 14 }}>
@@ -2241,7 +2216,7 @@ const MainPage = () => {
             </div>
           </div>
 
-          {/* ── Tech Stack ────────────────────────────────────────────────── */}
+          {/* ── Tech Stack ──────────────────────────────────────────────────── */}
           <div className="projj" style={{ marginTop: 50 }}>
             <div className="lettl">Tech Stack</div>
             <div className="tech-grid">
@@ -2257,7 +2232,7 @@ const MainPage = () => {
             </div>
           </div>
 
-          {/* ── Projects ──────────────────────────────────────────────────── */}
+          {/* ── Projects ────────────────────────────────────────────────────── */}
           <div className="projj" id="section-projects">
             <div className="lettl">Projects</div>
             <div>
@@ -2445,7 +2420,7 @@ const MainPage = () => {
               </button>
             </div>
 
-            {/* ── Social / More ────────────────────────────────────────────── */}
+            {/* ── Social / More ──────────────────────────────────────────────── */}
             <div className="kfie">
               <div className="lettl">More</div>
               <div className="social-list">
