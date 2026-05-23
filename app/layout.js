@@ -1,36 +1,32 @@
 /** @format */
 
-import { Geist, Geist_Mono, IBM_Plex_Mono } from "next/font/google";
+import { IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 const plexMono = IBM_Plex_Mono({
-  vairable: "--font-ibm-plex-mono",
+  variable: "--font-ibm-plex-mono",
   subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700"], // Specify the weight(s) you need
+  weight: ["100", "200", "300", "400", "500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata = {
   title: "Timothy Okoduwa",
-  description: ".............",
+  description:
+    "Frontend engineer building products that feel inevitable. Next.js, TypeScript, React, Firebase.",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} ${plexMono.vairable}`}
-      >
-        {children}
-      </body>
+      <head>
+        <style>{`
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body { margin: 0 !important; background: transparent; }
+          html { scroll-behavior: smooth; }
+        `}</style>
+      </head>
+      <body className={plexMono.variable}>{children}</body>
     </html>
   );
 }

@@ -1,11 +1,8 @@
 /** @format */
+"use client";
 
-import MainPage from "./component/MainPage";
+import ModeController from "./component/ModeController";
 
 export default function Home() {
-  return (
-    <div>
-      <MainPage />
-    </div>
-  );
+  return <ModeController />;
 }

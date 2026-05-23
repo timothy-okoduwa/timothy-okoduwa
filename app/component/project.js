@@ -38,6 +38,15 @@ const project = [
     npm: "",
   },
   {
+    name: "Naughty Place",
+    description:
+      "Premium adult lifestyle e-commerce platform with discreet same-day delivery across Lagos. Curated sex toys, lingerie, and personal care products with plain packaging, Paystack-powered checkout, and Firebase backend.",
+    link: "https://naughtyplace.ng/",
+    type: "Done + Private",
+    github: "",
+    npm: "",
+  },
+  {
     name: "JSON2Table",
     description:
       "A developer-friendly data explorer that converts JSON, YAML, XML, CSV, and JavaScript objects into clean tables and visual relationship graphs. It helps developers inspect, edit, and understand complex API and AI-generated data faster.",
@@ -148,15 +157,7 @@ const project = [
     github: "",
     npm: "",
   },
-  {
-    name: "weddingflix",
-    description:
-      "WeddingFlix allows couples to create personalized wedding websites to share event details, manage RSVPs, and provide essential guest information with customizable templates.",
-    link: "https://weddingflix.vercel.app/",
-    type: "Done + Private",
-    github: "",
-    npm: "",
-  },
+
   {
     name: "Vestarplus",
     description:
@@ -214,25 +215,6 @@ const project = [
     npm: "",
   },
 
-  {
-    name: "Beternal",
-    description:
-      "BeterNal is a platform that allows users to store, share, and manage videos, images, and documents easily. It provides a seamless way to upload and share media with others within the app",
-    link: "https://beternal.vercel.app/",
-    type: "Done + Private",
-    github: "",
-    npm: "",
-  },
-
-  {
-    name: "Hair Master",
-    description:
-      "Hair Master is a platform that connects users with professional hairstylists, barbers, makeup artists, and nail technicians.",
-    link: "https://hair-master.vercel.app/",
-    type: "Done + Private",
-    github: "",
-    npm: "",
-  },
   {
     name: "Pirobi",
     description:
