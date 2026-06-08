@@ -2,6 +2,15 @@
 
 const project = [
   {
+    name: "VaultEnv",
+    description:
+      "A CLI tool for end-to-end encrypted .env file backups across machines. No accounts, no passwords — just a 12-word BIP-39 recovery phrase. Uses AES-256-GCM encryption with PBKDF2-SHA256 key derivation at 600,000 iterations, so plaintext never leaves your device. Three commands cover everything: init (generates your recovery phrase and vault), backup (scans and encrypts all .env* files in your project tree), and restore (decrypts and writes files back to the right projects via Git remote / package name matching). The server stores only an encrypted blob and a vault ID — zero knowledge by design.",
+    link: "https://vaultenvv.vercel.app/",
+    type: "Open Source / Developer tool & CLI utility",
+    github: "https://github.com/timothy-okoduwa/vaultenv",
+    npm: "https://www.npmjs.com/package/vaultenv-cli",
+  },
+  {
     name: "ChatWot",
     description:
       "A live chat SaaS that lets businesses embed a real-time chat widget on any website with a single script tag. Features instant bidirectional messaging via Firebase Realtime DB, image sharing via Cloudinary, live visitor tracking, and a clean dashboard. Offers a 3-month free trial with Paystack billing for the Pro tier, which unlocks custom branding, priority support, and badge removal.",

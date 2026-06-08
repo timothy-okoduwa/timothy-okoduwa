@@ -6,6 +6,17 @@ import project from "./project";
 // ─── Full project list for expanded view ─────────────────────────────────────
 const featuredProjects = [
   {
+    name: "VaultEnv",
+    tagline: "Encrypted .env backup across machines",
+    description:
+      "Back up all your .env files with a single CLI command. AES-256-GCM encryption with PBKDF2-SHA256 key derivation — plaintext never leaves your device. No accounts, no passwords, just a 12-word BIP-39 recovery phrase. Three commands: init, backup, restore.",
+    stack: ["Node.js", "AES-256-GCM", "BIP-39", "PBKDF2-SHA256"],
+    link: "https://vaultenvv.vercel.app/",
+    github: "https://github.com/timothy-okoduwa/vaultenv",
+    npm: "https://www.npmjs.com/package/vaultenv-cli",
+    category: "Open Source / CLI Tool",
+  },
+  {
     name: "ChatWot",
     tagline: "Live chat SaaS for any website",
     description:
