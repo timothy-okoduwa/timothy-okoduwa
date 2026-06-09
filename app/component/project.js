@@ -2,6 +2,14 @@
 
 const project = [
   {
+    name: "Canvoo",
+    description:
+      "A browser-first, open-source graphic design tool — no login, no complexity, just a pure creative space. Comes preloaded with canvas presets for Instagram, YouTube, A4, and more. Supports rich typography with full Google Fonts integration, freehand vector drawing with editable anchor points, Unsplash image search with filters, and instant export to PNG, JPG, SVG, or PDF. Everything runs in the browser — open a tab, start designing.",
+    link: "https://canvoo.vercel.app/",
+    type: "Open Source / Design Tool",
+    github: "https://github.com/timothy-okoduwa/Canvo",
+  },
+  {
     name: "VaultEnv",
     description:
       "A CLI tool for end-to-end encrypted .env file backups across machines. No accounts, no passwords — just a 12-word BIP-39 recovery phrase. Uses AES-256-GCM encryption with PBKDF2-SHA256 key derivation at 600,000 iterations, so plaintext never leaves your device. Three commands cover everything: init (generates your recovery phrase and vault), backup (scans and encrypts all .env* files in your project tree), and restore (decrypts and writes files back to the right projects via Git remote / package name matching). The server stores only an encrypted blob and a vault ID — zero knowledge by design.",

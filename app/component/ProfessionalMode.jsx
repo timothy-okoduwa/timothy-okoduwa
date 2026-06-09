@@ -6,6 +6,17 @@ import project from "./project";
 // ─── Full project list for expanded view ─────────────────────────────────────
 const featuredProjects = [
   {
+    name: "Canvoo",
+    tagline: "Design in the browser, freely.",
+    description:
+      "Browser-first graphic design with no login and no friction. Canvas presets for Instagram, YouTube, A4, and more. Full Google Fonts support, freehand vector tools, Unsplash image search, and one-click export to PNG, JPG, SVG, or PDF. Open source, MIT licensed, free forever.",
+    stack: ["Next.js", "Canvas API", "Google Fonts", "Unsplash API"],
+    link: "https://canvoo.vercel.app/",
+    github: "https://github.com/timothy-okoduwa/Canvo",
+    npm: null,
+    category: "Open Source / Design Tool",
+  },
+  {
     name: "VaultEnv",
     tagline: "Encrypted .env backup across machines",
     description:
