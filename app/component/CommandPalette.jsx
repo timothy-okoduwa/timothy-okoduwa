@@ -1,19 +1,6 @@
 /** @format */
 "use client";
 
-/**
- * CommandPalette.jsx
- * Press Cmd+K (Mac) or Ctrl+K (Win/Linux) to open.
- * Searches projects, social links, and sections.
- *
- * Usage in MainPage.jsx:
- *   import CommandPalette from "./CommandPalette";
- *   // Pass your projects array in:
- *   <CommandPalette projects={project} />
- *
- * Place it anywhere inside your root div — it renders as a fixed portal.
- */
-
 import { useEffect, useState, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
 
@@ -62,16 +49,6 @@ const STATIC_COMMANDS = [
         ?.scrollIntoView({ behavior: "smooth" }),
   },
   {
-    id: "scroll-guestbook",
-    label: "Jump to Guestbook",
-    desc: "Scroll to guestbook & sign",
-    icon: "✍",
-    action: () =>
-      document
-        .getElementById("section-guestbook")
-        ?.scrollIntoView({ behavior: "smooth" }),
-  },
-  {
     id: "scroll-top",
     label: "Scroll to top",
     desc: "",
@@ -89,9 +66,10 @@ function highlight(text, query) {
       {text.slice(0, idx)}
       <mark
         style={{
-          background: "var(--accent-dim)",
-          color: "var(--accent)",
+          background: "rgba(168, 85, 247, 0.2)",
+          color: "#c084fc",
           borderRadius: 2,
+          padding: "0 2px",
         }}
       >
         {text.slice(idx, idx + query.length)}
@@ -113,7 +91,9 @@ function Palette({ projects, onClose }) {
   const projectCommands = projects.map((p) => ({
     id: `proj-${p.name}`,
     label: p.name,
-    desc: p.description?.slice(0, 60) + (p.description?.length > 60 ? "…" : ""),
+    desc:
+      p.description?.slice(0, 65) +
+      (p.description?.length > 65 ? "…" : ""),
     icon: "→",
     action: () => window.open(p.link, "_blank"),
   }));
@@ -158,7 +138,6 @@ function Palette({ projects, onClose }) {
     }
   };
 
-  // Scroll selected item into view
   useEffect(() => {
     const el = listRef.current?.children[selected];
     el?.scrollIntoView({ block: "nearest" });
@@ -168,11 +147,11 @@ function Palette({ projects, onClose }) {
     display: "flex",
     alignItems: "center",
     gap: 12,
-    padding: "10px 16px",
+    padding: "10px 14px",
     cursor: "pointer",
     borderRadius: 6,
-    background: i === selected ? "var(--surface-hover)" : "transparent",
-    borderLeft: `2px solid ${i === selected ? "var(--accent)" : "transparent"}`,
+    background: i === selected ? "rgba(255, 255, 255, 0.05)" : "transparent",
+    borderLeft: `2px solid ${i === selected ? "#a855f7" : "transparent"}`,
     transition: "all 0.12s",
   });
 
@@ -194,9 +173,8 @@ function Palette({ projects, onClose }) {
         style={{
           position: "fixed",
           inset: 0,
-          background: "rgba(10,10,10,0.72)",
-          backdropFilter: "blur(4px)",
-          animation: "npFadeIn 0.15s ease",
+          background: "rgba(0,0,0,0.85)",
+          backdropFilter: "blur(6px)",
         }}
       />
 
@@ -208,12 +186,11 @@ function Palette({ projects, onClose }) {
           width: "100%",
           maxWidth: 560,
           borderRadius: 12,
-          border: "1px solid var(--border-hover)",
-          background: "var(--bg)",
+          border: "1px solid rgba(255, 255, 255, 0.12)",
+          background: "#0e0d0a",
           boxShadow:
-            "0 32px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(244,165,229,0.06)",
+            "0 32px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(168,85,247,0.15)",
           overflow: "hidden",
-          animation: "npSlideUp 0.18s cubic-bezier(0.22,1,0.36,1)",
         }}
         onKeyDown={onKey}
       >
@@ -224,7 +201,7 @@ function Palette({ projects, onClose }) {
             alignItems: "center",
             gap: 10,
             padding: "14px 16px",
-            borderBottom: "1px solid var(--border)",
+            borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
           }}
         >
           <svg
@@ -232,7 +209,7 @@ function Palette({ projects, onClose }) {
             height="14"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="var(--text-faint)"
+            stroke="#878580"
             strokeWidth="2"
             strokeLinecap="round"
           >
@@ -249,21 +226,21 @@ function Palette({ projects, onClose }) {
               background: "none",
               border: "none",
               outline: "none",
-              fontFamily: "'IBM Plex Mono', monospace",
+              fontFamily: "var(--font-dm-sans), sans-serif",
               fontSize: 14,
-              color: "var(--text-primary)",
-              caretColor: "var(--accent)",
+              color: "#f5f2eb",
+              caretColor: "#c084fc",
             }}
           />
           <kbd
             style={{
               padding: "2px 7px",
               borderRadius: 4,
-              border: "1px solid var(--border)",
-              background: "var(--surface)",
+              border: "1px solid rgba(255,255,255,0.1)",
+              background: "rgba(255,255,255,0.05)",
               fontSize: 11,
-              fontFamily: "'IBM Plex Mono', monospace",
-              color: "var(--text-faint)",
+              fontFamily: "var(--font-ibm-plex-mono), monospace",
+              color: "#878580",
             }}
           >
             esc
@@ -284,9 +261,9 @@ function Palette({ projects, onClose }) {
               style={{
                 padding: "24px",
                 textAlign: "center",
-                fontFamily: "'IBM Plex Mono', monospace",
+                fontFamily: "var(--font-dm-sans), sans-serif",
                 fontSize: 13,
-                color: "var(--text-faint)",
+                color: "#878580",
               }}
             >
               No results for "{query}"
@@ -304,25 +281,24 @@ function Palette({ projects, onClose }) {
                     width: 28,
                     height: 28,
                     borderRadius: 6,
-                    border: "1px solid var(--border)",
-                    background: "var(--surface)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    background: "rgba(255,255,255,0.03)",
                     display: "grid",
                     placeItems: "center",
                     fontSize: 12,
-                    color: "var(--text-muted)",
+                    color: i === selected ? "#c084fc" : "#878580",
                     flexShrink: 0,
-                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontFamily: "var(--font-ibm-plex-mono), monospace",
                   }}
                 >
                   {cmd.icon}
                 </span>
-                <div style={{ minWidth: 0 }}>
+                <div style={{ minWidth: 0, flex: 1 }}>
                   <div
                     style={{
-                      fontSize: 13,
-                      fontFamily: "'IBM Plex Mono', monospace",
-                      color: "var(--text-primary)",
+                      fontSize: 14,
                       fontWeight: 500,
+                      color: i === selected ? "#c084fc" : "#f5f2eb",
                     }}
                   >
                     {highlight(cmd.label, query)}
@@ -330,81 +306,48 @@ function Palette({ projects, onClose }) {
                   {cmd.desc && (
                     <div
                       style={{
-                        fontSize: 11,
-                        fontFamily: "'IBM Plex Mono', monospace",
-                        color: "var(--text-faint)",
-                        marginTop: 2,
+                        fontSize: 12,
+                        color: "#878580",
+                        whiteSpace: "nowrap",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
                       }}
                     >
                       {highlight(cmd.desc, query)}
                     </div>
                   )}
                 </div>
-                {i === selected && (
-                  <kbd
-                    style={{
-                      marginLeft: "auto",
-                      padding: "2px 7px",
-                      borderRadius: 4,
-                      border: "1px solid var(--border-hover)",
-                      background: "var(--accent-dim)",
-                      fontSize: 10,
-                      fontFamily: "'IBM Plex Mono', monospace",
-                      color: "var(--accent)",
-                      flexShrink: 0,
-                    }}
-                  >
-                    ↵
-                  </kbd>
-                )}
+                <span
+                  style={{
+                    fontSize: 11,
+                    fontFamily: "var(--font-ibm-plex-mono), monospace",
+                    color: "#878580",
+                    opacity: i === selected ? 1 : 0.4,
+                  }}
+                >
+                  ↵
+                </span>
               </div>
             ))
           )}
         </div>
 
-        {/* Footer hint */}
+        {/* Footer info */}
         <div
           style={{
-            padding: "8px 16px",
-            borderTop: "1px solid var(--border)",
+            padding: "10px 16px",
+            borderTop: "1px solid rgba(255, 255, 255, 0.08)",
             display: "flex",
-            gap: 16,
             alignItems: "center",
+            justifyContent: "space-between",
+            fontSize: 11,
+            color: "#878580",
+            fontFamily: "var(--font-ibm-plex-mono), monospace",
           }}
         >
-          {[
-            ["↑↓", "navigate"],
-            ["↵", "open"],
-            ["esc", "close"],
-          ].map(([k, v]) => (
-            <span
-              key={k}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 5,
-                fontSize: 11,
-                fontFamily: "'IBM Plex Mono', monospace",
-                color: "var(--text-faint)",
-              }}
-            >
-              <kbd
-                style={{
-                  padding: "1px 5px",
-                  borderRadius: 3,
-                  border: "1px solid var(--border)",
-                  background: "var(--surface)",
-                  fontSize: 10,
-                }}
-              >
-                {k}
-              </kbd>
-              {v}
-            </span>
-          ))}
+          <span>↑↓ to navigate</span>
+          <span>↵ to select</span>
+          <span>esc to dismiss</span>
         </div>
       </div>
     </div>,
@@ -412,84 +355,6 @@ function Palette({ projects, onClose }) {
   );
 }
 
-// ─── Trigger + hint ────────────────────────────────────────────────────────
-
-export default function CommandPalette({ projects = [] }) {
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    const onKey = (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-        e.preventDefault();
-        setOpen((v) => !v);
-      }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
-
-  return (
-    <>
-      {/* Subtle hint badge (top-left area) */}
-      <button
-        onClick={() => setOpen(true)}
-        style={{
-          position: "fixed",
-          bottom: 22,
-          right: 24,
-          zIndex: 100,
-          display: "flex",
-          alignItems: "center",
-          gap: 7,
-          padding: "6px 12px",
-          borderRadius: 99,
-          border: "1px solid var(--border)",
-          background: "var(--surface)",
-          color: "var(--text-faint)",
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontSize: 11,
-          cursor: "pointer",
-          backdropFilter: "blur(8px)",
-          transition: "all 0.2s",
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.borderColor = "var(--border-hover)";
-          e.currentTarget.style.color = "var(--accent)";
-          e.currentTarget.style.background = "var(--accent-dim)";
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.borderColor = "var(--border)";
-          e.currentTarget.style.color = "var(--text-faint)";
-          e.currentTarget.style.background = "var(--surface)";
-        }}
-      >
-        <svg
-          width="11"
-          height="11"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-        >
-          <circle cx="11" cy="11" r="8" />
-          <line x1="21" y1="21" x2="16.65" y2="16.65" />
-        </svg>
-        <span>Search</span>
-        <kbd
-          style={{
-            padding: "1px 5px",
-            borderRadius: 3,
-            border: "1px solid var(--border)",
-            background: "var(--toggle-bg)",
-            fontSize: 10,
-          }}
-        >
-          ⌘K
-        </kbd>
-      </button>
-
-      {open && <Palette projects={projects} onClose={() => setOpen(false)} />}
-    </>
-  );
+export default function CommandPalette({ projects = [], onClose }) {
+  return <Palette projects={projects} onClose={onClose} />;
 }

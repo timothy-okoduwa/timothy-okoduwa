@@ -2,244 +2,177 @@
 
 const project = [
   {
-    name: "Canvoo",
+    name: "Freedom",
+    domain: "freedom-mac.vercel.app",
     description:
-      "A browser-first, open-source graphic design tool — no login, no complexity, just a pure creative space. Comes preloaded with canvas presets for Instagram, YouTube, A4, and more. Supports rich typography with full Google Fonts integration, freehand vector drawing with editable anchor points, Unsplash image search with filters, and instant export to PNG, JPG, SVG, or PDF. Everything runs in the browser — open a tab, start designing.",
+      "An automatic execution engine for Mac. Plan once, start your day, and let Freedom step through your task queue with zero decision fatigue and a calm floating presence.",
+    link: "https://freedom-mac.vercel.app/",
+    type: "macOS App / Productivity Engine",
+    github: "https://github.com/timothy-okoduwa/freedom",
+    featured: true,
+  },
+  {
+    name: "Cloak",
+    domain: "usecloak.top",
+    description:
+      "End-to-end encrypted secret management for engineering teams. Replaces shared .env files with zero-disk CLI runtime process injection, environment diffing, and audit logging.",
+    link: "https://usecloak.top/",
+    type: "Security / Developer Tool & CLI",
+    github: "https://github.com/timothy-okoduwa/usecloak",
+    featured: true,
+  },
+  {
+    name: "Canvoo",
+    domain: "canvoo.vercel.app",
+    description:
+      "A browser-first, open-source graphic design tool — no login required. Canvas presets, full Google Fonts integration, freehand vector drawing, Unsplash image search, and instant PNG/SVG export.",
     link: "https://canvoo.vercel.app/",
     type: "Open Source / Design Tool",
     github: "https://github.com/timothy-okoduwa/Canvo",
+    featured: true,
   },
   {
     name: "VaultEnv",
+    domain: "vaultenvv.vercel.app",
     description:
-      "A CLI tool for end-to-end encrypted .env file backups across machines. No accounts, no passwords — just a 12-word BIP-39 recovery phrase. Uses AES-256-GCM encryption with PBKDF2-SHA256 key derivation at 600,000 iterations, so plaintext never leaves your device. Three commands cover everything: init (generates your recovery phrase and vault), backup (scans and encrypts all .env* files in your project tree), and restore (decrypts and writes files back to the right projects via Git remote / package name matching). The server stores only an encrypted blob and a vault ID — zero knowledge by design.",
+      "CLI tool for end-to-end encrypted .env backups across machines. BIP-39 recovery phrases with AES-256-GCM encryption at 600k PBKDF2 iterations. Zero-knowledge architecture.",
     link: "https://vaultenvv.vercel.app/",
-    type: "Open Source / Developer tool & CLI utility",
+    type: "Open Source / Developer Tool & CLI",
     github: "https://github.com/timothy-okoduwa/vaultenv",
     npm: "https://www.npmjs.com/package/vaultenv-cli",
+    featured: true,
   },
   {
     name: "ChatWot",
+    domain: "chatwot.vercel.app",
     description:
-      "A live chat SaaS that lets businesses embed a real-time chat widget on any website with a single script tag. Features instant bidirectional messaging via Firebase Realtime DB, image sharing via Cloudinary, live visitor tracking, and a clean dashboard. Offers a 3-month free trial with Paystack billing for the Pro tier, which unlocks custom branding, priority support, and badge removal.",
+      "Live chat SaaS that lets businesses embed a real-time customer chat widget with a single script tag. Features instant messaging, visitor tracking, and subscription billing.",
     link: "https://chatwot.vercel.app/",
-    type: "SaaS / Customer support & live chat tool",
+    type: "SaaS / Customer Support & Live Chat",
     github: "",
     npm: "",
+    featured: true,
   },
   {
     name: "MailSift",
+    domain: "mailsiftt.vercel.app",
     description:
-      "A webmail discovery tool that scans thousands of email domains to find working webmail login pages. Features a SIFT token economy with Crypto payments, bulk email import via .txt/.csv/.pdf, structured CSV and PDF report exports, and a per-use pricing model with no subscriptions.",
+      "Webmail discovery tool scanning thousands of email domains. Token economy with crypto payments, bulk email import, and structured CSV/PDF report exports.",
     link: "https://mailsiftt.vercel.app/",
-    type: "Developer utility / Email scanning SaaS",
+    type: "Developer Utility / Email SaaS",
     github: "",
     npm: "",
+    featured: false,
   },
   {
     name: "ShipMeter",
+    domain: "shipmeter.vercel.app",
     description:
-      "A developer productivity SaaS that tracks GitHub commits, visualizes coding activity with 365-day heatmaps, and gamifies consistency with streaks and achievements. Features real-time analytics, commit quality scoring, language breakdowns, productivity time analysis, and AI-powered shareable stat cards.",
+      "Developer productivity SaaS tracking GitHub commits, visualizing coding activity with 365-day heatmaps, language breakdowns, and AI shareable stat cards.",
     link: "https://shipmeter.vercel.app/",
-    type: "Developer productivity / Analytics SaaS",
+    type: "Developer Productivity / Analytics SaaS",
     github: "https://github.com/timothy-okoduwa/shipmeter",
     npm: "",
+    featured: true,
   },
   {
     name: "Markly",
+    domain: "marklyy.vercel.app",
     description:
-      "A production-ready habit tracking application with GitHub-style heatmap visualizations. Track multiple habits with customizable colors and shapes, view detailed statistics including streaks and monthly summaries, and sync everything in real-time with Firebase. Built mobile-first with dark/light mode support.",
+      "Production-ready habit tracking app with GitHub-style heatmap visualizations, custom colors and shapes, real-time Firebase sync, and dark/light modes.",
     link: "https://marklyy.vercel.app/",
-    type: "Habit tracking / Personal productivity app",
+    type: "Habit Tracking / Personal Productivity",
     github: "https://github.com/timothy-okoduwa/markly",
     npm: "",
-  },
-  {
-    name: "Naughty Place",
-    description:
-      "Premium adult lifestyle e-commerce platform with discreet same-day delivery across Lagos. Curated sex toys, lingerie, and personal care products with plain packaging, Paystack-powered checkout, and Firebase backend.",
-    link: "https://naughtyplace.ng/",
-    type: "Done + Private",
-    github: "",
-    npm: "",
+    featured: false,
   },
   {
     name: "JSON2Table",
+    domain: "json-2-table.vercel.app",
     description:
-      "A developer-friendly data explorer that converts JSON, YAML, XML, CSV, and JavaScript objects into clean tables and visual relationship graphs. It helps developers inspect, edit, and understand complex API and AI-generated data faster.",
+      "Developer-friendly data explorer converting JSON, YAML, XML, CSV, and JS objects into clean interactive tables and visual relationship graphs.",
     link: "https://json-2-table.vercel.app/",
-    type: "Developer utility / data visualization tool",
+    type: "Developer Utility / Data Visualization",
     github: "https://github.com/timothy-okoduwa/json2table",
     npm: "",
+    featured: false,
   },
   {
     name: "DotSnap",
+    domain: "dotsnap.netlify.app",
     description:
-      "An open-source developer utility and web tool to mask .env files so you can safely share configuration files without exposing secrets. It supports CLI, web UI, and NPX usage for secure environment masking.",
+      "Open-source developer tool to mask .env files so you can safely share configuration files without exposing secrets. CLI, web UI, and NPX support.",
     link: "https://dotsnap.netlify.app/",
-    type: "Developer utility / web tool",
+    type: "Developer Utility / Security Tool",
     github: "https://github.com/timothy-okoduwa/dotsnap",
     npm: "https://www.npmjs.com/package/dotsnap",
+    featured: false,
   },
   {
     name: "CommitDiff",
+    domain: "commitdiff.vercel.app",
     description:
-      "AI-powered developer tool that analyzes your staged code changes and automatically generates professional, conventional git commit messages in seconds, with both CLI and web interfaces.",
+      "AI-powered developer tool analyzing staged code changes to automatically generate conventional git commit messages in seconds via CLI and web UI.",
     link: "https://commitdiff.vercel.app/",
-    type: "AI developer tool",
+    type: "AI Developer Tool",
     github: "https://github.com/timothy-okoduwa/commitdiff",
     npm: "https://www.npmjs.com/package/commitdiff",
+    featured: false,
   },
-
   {
     name: "Snippad",
+    domain: "snippad.cloud",
     description:
-      "Snippad is a collaborative code snippet vault for developers. The idea is simple: you can save and organize your code snippets, choose to make them public or private, and even share them with specific users via email — like a private GitHub Gist with access control. But we're going further. Snippad allows live editing (like Figma, but for code), inline comments, and real-time previews for HTML, CSS, JavaScript, and even React components. It's built for solo devs and teams who want a faster way to experiment, share, and reuse code.",
+      "Collaborative code snippet vault for developers. Live editing, inline comments, access control, and real-time previews for HTML, CSS, JS, and React.",
     link: "https://snippad.cloud/",
-    type: "Done + Private",
+    type: "Collaborative Code Vault / Developer Tool",
     github: "",
     npm: "",
+    featured: false,
   },
-
   {
-    name: "WorkOnPro Android",
+    name: "WorkOnPro",
+    domain: "play.google.com",
     description:
-      "WorkOnPro connects companies and individuals with registered professionals, lets users create and share work orders, monitor progress, and pay for completed services — protecting both parties. (Android version)",
+      "Work order management and professional services marketplace. Connects companies with verified service professionals, tracks progress, and handles payments.",
     link: "https://play.google.com/store/apps/details?id=com.loveth.workonpro&hl=en",
-    type: "Mobile App (Productivity / Services Marketplace)",
+    type: "Mobile App / Services Marketplace",
     github: "",
     npm: "",
+    featured: false,
   },
   {
-    name: "WorkOnPro IOS",
+    name: "EstateOne",
+    domain: "play.google.com",
     description:
-      "WorkOnPro provides services to create and share work orders with registered professionals, monitor project progress, and process payments between parties. (iOS version)",
-    link: "https://apps.apple.com/ng/app/workonpro/id6443591286",
-    type: "Mobile App (Productivity / Services Marketplace)",
-    github: "",
-    npm: "",
-  },
-  {
-    name: "EstateOne Android",
-    description:
-      "Estate management system for property administrators to streamline visitor check-ins, maintenance, emergency alerts, and access control — designed to simplify property admin workflows. (Productivity category on Google Play)",
+      "Estate management system for property administrators to streamline visitor check-ins, maintenance requests, emergency alerts, and gate access control.",
     link: "https://play.google.com/store/apps/details?id=com.estatemanage.app&hl=en",
-    type: "Mobile App (Productivity / Estate Management)",
+    type: "Mobile App / Property Management",
     github: "",
     npm: "",
-  },
-  {
-    name: "EstateOne IOS",
-    description:
-      "Estate management system for property administrators to streamline visitor check-ins, maintenance, emergency alerts, and access control — designed to simplify property admin workflows. (Productivity category on Google Play)",
-    link: "https://apps.apple.com/gb/app/estateone/id6758697503",
-    type: "Mobile App (Productivity / Estate Management)",
-    github: "",
-    npm: "",
-  },
-  {
-    name: "Original Aso Ebi IOS",
-    description:
-      "Original Aso-Ebi is a top fabric store in Lagos Island, Nigeria, offering a wide range of high-quality traditional and modern fabrics for weddings and cultural events. They blend heritage with fashion and focus on customer satisfaction with personalized service.",
-    link: "https://apps.apple.com/gb/app/original-aso-ebi-ideraoluwa/id6761770150",
-    type: "Mobile App (Shopping / Fashion)",
-    github: "",
-    npm: "",
+    featured: false,
   },
   {
     name: "Original Aso Ebi",
+    domain: "originalasoebi.com",
     description:
-      "Original Aso-Ebi is a top fabric store in Lagos Island, Nigeria, offering a wide range of high-quality traditional and modern fabrics for weddings and cultural events. They blend heritage with fashion and focus on customer satisfaction with personalized service",
+      "E-commerce platform and mobile experience for Lagos Island's premier traditional and modern fabric retailer for weddings and cultural events.",
     link: "https://originalasoebi.com/",
-    type: "Web App (Shopping / Fashion)",
+    type: "Web & Mobile App / Fashion E-Commerce",
     github: "",
     npm: "",
-  },
-
-  {
-    name: "Renthall",
-    description:
-      "RentHall is a web app that helps landlords manage tenant info, track payments, and handle property details efficiently, simplifying rental property administration.",
-    link: "https://renthall.ng/search",
-    type: "WIP + Private",
-    github: "",
-    npm: "",
-  },
-  {
-    name: "Oneway Template",
-    description:
-      "OneWayTemplate is a Nigerian platform offering professionally designed templates for Canva, PSD, Figma, XD, Google Docs, and more. Tailored for content creators, marketers, and designers",
-    link: "https://www.onewaytemplate.com/",
-    type: "Done + Private",
-    github: "",
-    npm: "",
-  },
-
-  {
-    name: "Vestarplus",
-    description:
-      "VestarPlus is a UX, UI, and web design company that collaborates with established brands, businesses, and startups worldwide to create impactful products enhancing user experiences.",
-    link: "https://www.vestarplus.com/",
-    type: "Done + Private",
-    github: "",
-    npm: "",
+    featured: false,
   },
   {
     name: "Vestarplus Design System",
+    domain: "vestarplus-design-system.vercel.app",
     description:
-      "The VestarPlus Design System is a component library developed by the VestarPlus team to streamline and standardize their design and development processes. It offers a collection of reusable UI components, such as avatars, alerts, buttons, and date pickers, which can be utilized across various projects to ensure consistency and efficiency.",
+      "Reusable UI component library for web applications featuring avatars, alerts, buttons, date pickers, and layout grids published on npm.",
     link: "https://vestarplus-design-system.vercel.app/",
-    type: "Done + Private",
+    type: "Design System / NPM Package",
     github: "",
     npm: "https://www.npmjs.com/package/vestarplus-design-system/",
-  },
-  {
-    name: "inteck-design-system-mobile",
-    description:
-      "LAD mobile component library — a design‑system package providing reusable UI components optimized for mobile applications, last published April 8, 2021. Minimal dependencies, ISC‑licensed.",
-    link: "https://inteck-design-system-web.onrender.com/",
-    type: "Done + Open",
-    github: "",
-    npm: "https://www.npmjs.com/package/inteck-design-system-mobile",
-  },
-
-  {
-    name: "vplusacademy",
-    description:
-      "VPlus Academy offers tech-focused courses in UI/UX design, front-end development, digital marketing, product management, and graphic design to help individuals advance in the tech industry.",
-    link: "https://www.vplusacademy.com/",
-    type: "Done + Private",
-    github: "",
-    npm: "",
-  },
-
-  {
-    name: "FDGS Energy group",
-    description:
-      "FDGS Energy Group is a Nigerian-based energy company specializing in oil trading, maritime logistics, and project management. Established in 2006, it offers reliable services in the global energy sector.",
-    link: "https://www.fdgsenergygroup.ch/",
-    type: "Done + Private",
-    github: "",
-    npm: "",
-  },
-  {
-    name: "Falcon Wood Exploration Company",
-    description:
-      "Falcon Wood is a Nigerian-based energy services company specializing in advanced well intervention, drilling support, and reservoir optimization. Their offerings include coiled tubing, slickline, wireline, and thru-tubing tool services, as well as OCTG management, conductor piling, and marine logistics. They focus on delivering safe, efficient, and innovative solutions for oil and gas operations worldwide.",
-    link: "https://www.falconwood.ch/",
-    type: "Done + Private",
-    github: "",
-    npm: "",
-  },
-
-  {
-    name: "Pirobi",
-    description:
-      "Pirobi is a digital agency specializing in social media management and creative advertising.",
-    link: "https://pirobi.com/",
-    type: "Done + Private",
-    github: "",
-    npm: "",
+    featured: false,
   },
 ];
 
