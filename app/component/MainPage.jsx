@@ -119,7 +119,7 @@ export default function MainPage() {
         <p className="header-bio">
           Creator of{" "}
           <a
-            href="https://freedom-mac.vercel.app/"
+            href="https://www.usefreedom.top/"
             target="_blank"
             rel="noreferrer"
             className="inline-project-link"

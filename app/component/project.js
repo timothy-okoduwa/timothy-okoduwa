@@ -3,10 +3,10 @@
 const project = [
   {
     name: "Freedom",
-    domain: "freedom-mac.vercel.app",
+    domain: "usefreedom.top",
     description:
       "An automatic execution engine for Mac. Plan once, start your day, and let Freedom step through your task queue with zero decision fatigue and a calm floating presence.",
-    link: "https://freedom-mac.vercel.app/",
+    link: "https://www.usefreedom.top/",
     type: "macOS App / Productivity Engine",
     github: "https://github.com/timothy-okoduwa/freedom",
     featured: true,
