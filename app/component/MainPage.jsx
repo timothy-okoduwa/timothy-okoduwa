@@ -124,19 +124,17 @@ export default function MainPage() {
             rel="noreferrer"
             className="inline-project-link"
           >
-            <img
-              src="/freedom.png"
-              alt="Freedom"
-              className="inline-icon"
-              style={{
-                width: "1.15em",
-                height: "1.15em",
-                objectFit: "contain",
-                borderRadius: "50%",
-                verticalAlign: "-0.15em",
-                display: "inline-block",
-              }}
-            />
+            <span className="logo-box">
+              <img
+                src="/freedom.png"
+                alt="Freedom"
+                className="inline-icon"
+                style={{
+                  objectFit: "contain",
+                  borderRadius: "2px",
+                }}
+              />
+            </span>
             <span>Freedom</span>
           </a>
           ,{" "}
@@ -146,19 +144,17 @@ export default function MainPage() {
             rel="noreferrer"
             className="inline-project-link"
           >
-            <img
-              src="/cloak.png"
-              alt="Cloak"
-              className="inline-icon"
-              style={{
-                width: "1.15em",
-                height: "1.15em",
-                objectFit: "contain",
-                borderRadius: "4px",
-                verticalAlign: "-0.15em",
-                display: "inline-block",
-              }}
-            />
+            <span className="logo-box">
+              <img
+                src="/cloak.png"
+                alt="Cloak"
+                className="inline-icon"
+                style={{
+                  objectFit: "contain",
+                  borderRadius: "2px",
+                }}
+              />
+            </span>
             <span>Cloak</span>
           </a>
           ,{" "}
@@ -168,41 +164,37 @@ export default function MainPage() {
             rel="noreferrer"
             className="inline-project-link"
           >
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              className="inline-icon"
-              style={{
-                width: "1.15em",
-                height: "1.15em",
-                verticalAlign: "-0.15em",
-                display: "inline-block",
-              }}
-            >
-              <path
-                d="M12 2L2 7l10 5 10-5-10-5Z"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M2 17l10 5 10-5"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M2 12l10 5 10-5"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <span className="logo-box">
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                className="inline-icon"
+              >
+                <path
+                  d="M12 2L2 7l10 5 10-5-10-5Z"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M2 17l10 5 10-5"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M2 12l10 5 10-5"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
             <span>Canvoo</span>
           </a>
           , and{" "}
@@ -212,28 +204,28 @@ export default function MainPage() {
             rel="noreferrer"
             className="inline-project-link"
           >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              className="inline-icon"
-              style={{
-                width: "1.15em",
-                height: "1.15em",
-                verticalAlign: "-0.15em",
-                display: "inline-block",
-              }}
-            >
-              <rect x="3" y="11" width="18" height="11" rx="2" />
-              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-            </svg>
+            <span className="logo-box">
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="inline-icon"
+              >
+                <rect x="3" y="11" width="18" height="11" rx="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+            </span>
             <span>VaultEnv</span>
           </a>
-          . Focused on developer tools, security utilities, macOS apps, and high-craft web software.
+          .
+          <span className="header-bio-focus">
+            Focused on developer tools, security utilities, macOS apps, and high-craft web software.
+          </span>
         </p>
 
         {/* Social Links */}

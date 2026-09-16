@@ -151,11 +151,29 @@ body {
 }
 
 /* ── Inline Brand Logos & Links ── */
+.logo-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  flex-shrink: 0;
+  vertical-align: -0.25em;
+  transition: all 0.2s ease;
+}
+
+.inline-project-link:hover .logo-box {
+  background: rgba(168, 85, 247, 0.15);
+  border-color: rgba(168, 85, 247, 0.4);
+}
+
 .inline-icon {
-  width: 1.15em !important;
-  height: 1.15em !important;
-  display: inline-block !important;
-  vertical-align: -0.15em !important;
+  width: 13px !important;
+  height: 13px !important;
+  display: block !important;
   flex-shrink: 0;
 }
 
@@ -182,6 +200,11 @@ body {
 
 .inline-project-link:hover span {
   text-decoration-color: rgba(168, 85, 247, 0.6);
+}
+
+.header-bio-focus {
+  display: block;
+  margin-top: 0.5rem;
 }
 
 /* ── Social Links ── */
